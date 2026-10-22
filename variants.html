@@ -1,0 +1,8 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>错题变式练习</title><link rel="stylesheet" href="common.css"><style>.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}</style></head>
+<body><div class="wrap"><a class="back" href="index.html">← 返回首页</a><div class="card"><h2 id="t">错题变式练习</h2><div id="box"></div></div></div>
+<script src="common.js"></script><script src="math/data.js"></script><script src="physics/data.js"></script><script>
+var s=(location.search.match(/s=(\w+)/)||[])[1]||"math";
+document.getElementById("t").textContent=(s==="physics"?"⚡ 物理":"📐 数学")+" 错题变式练习";
+XXGame.variantPractice(document.getElementById("box"),s,s==="physics"?window.PHYSICS_DATA:window.MATH_DATA);
+</script></body></html>

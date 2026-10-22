@@ -1,0 +1,120 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>折断的大树</title><link rel="stylesheet" href="../common.css">
+<style>.hud{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}
+.msg{min-height:28px;margin:8px 0;font-size:18px}.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}
+.tag{display:inline-block;color:#fff;border-radius:10px;padding:2px 10px;font-size:16px}.scene svg{width:100%;height:auto;display:block}
+select.sel{font-size:20px;padding:8px;border:3px solid var(--orange);border-radius:12px;font-family:inherit}</style></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回地图</a>
+<div class="hud"><span id="hearts"></span><span id="stage"></span><span id="coins"></span></div>
+<div class="grid"><div class="col1"><div class="card scene"><h2>🌲 折断的大树</h2><svg viewBox="0 0 300 170"><rect width="300" height="170" rx="14" fill="#E9F7FF"/><rect y="140" width="300" height="30" fill="#9CD67A"/>
+<line x1="70" y1="140" x2="70" y2="80" stroke="#8B5A2B" stroke-width="10"/><line x1="70" y1="80" x2="230" y2="140" stroke="#8B5A2B" stroke-width="7"/>
+<circle cx="236" cy="132" r="16" fill="#3E9B4F"/><text x="34" y="115" font-size="15">残干</text><text x="140" y="100" font-size="15">折断段(斜边)</text><text x="120" y="160" font-size="15">地面距离</text></svg><p>勾股定理高频错点：折断/梯子等实际应用。口诀：断的是斜边·竖的是残干·地的是距离。</p></div></div>
+<div class="card" id="box"></div></div></div>
+<script src="../common.js"></script><script src="data.js"></script><script src="levels.js"></script><script src="chapters.js"></script>
+<script>
+XXGame.quiz({subject:"math", levelId:"gougu_break", items:[
+ {
+  "kind": "小怪①·折竹",
+  "type": "mc",
+  "q": "一根竹竿在离地 3 米处折断，顶端落在离竹竿底端 4 米处。竹竿折断前高多少米？",
+  "opts": [
+   "7",
+   "8",
+   "5",
+   "12"
+  ],
+  "ans": 1,
+  "hint": "残干 3、地面 4 是直角边，折断段是斜边：√(3²+4²)=5；原高=3+5。",
+  "v": {
+   "q": "一棵树在离地 6 米处折断，顶端落在离树底 8 米处，原高多少米？",
+   "opts": [
+    "14",
+    "10",
+    "16",
+    "48"
+   ],
+   "ans": 2
+  },
+  "whySrc": "W6-18b"
+ },
+ {
+  "kind": "小怪②·梯子",
+  "type": "mc",
+  "q": "一架 10 米长的梯子斜靠在墙上，梯子底端离墙 6 米，梯子顶端离地多高？",
+  "opts": [
+   "8 米",
+   "4 米",
+   "16 米",
+   "√136 米"
+  ],
+  "ans": 0,
+  "hint": "梯子是斜边：√(10²−6²)=√64=8。",
+  "v": {
+   "q": "13 米长的梯子，底端离墙 5 米，顶端离地多高？",
+   "opts": [
+    "12 米",
+    "8 米",
+    "18 米",
+    "√194 米"
+   ],
+   "ans": 0
+  },
+  "why": {
+   "错因": "把梯子长当成直角边，用了平方和而不是平方差。",
+   "概念": "梯子、墙、地面构成直角三角形，梯子是斜边。",
+   "公式": "直角边=√(斜边²−另一直角边²)"
+  }
+ },
+ {
+  "kind": "小怪③·吹折旗杆",
+  "type": "mc",
+  "q": "一根 9 米高的旗杆被风吹折，顶端落在离旗杆底部 3 米处。折断处离地多高？",
+  "opts": [
+   "3 米",
+   "4 米",
+   "5 米",
+   "6 米"
+  ],
+  "ans": 1,
+  "hint": "设折断处离地 x 米，折下部分 (9−x) 米：x²+3²=(9−x)²，解得 x=4。",
+  "v": {
+   "q": "8 米高的旗杆被吹折，顶端落在离底部 4 米处，折断处离地多高？",
+   "opts": [
+    "3 米",
+    "4 米",
+    "5 米",
+    "2 米"
+   ],
+   "ans": 0
+  },
+  "why": {
+   "错因": "只知道总长，不会设未知数；折下部分要用“总长−x”表示。",
+   "概念": "残干 x、地面距离、折下部分(总长−x)构成直角三角形，折下部分是斜边。",
+   "公式": "x²+d²=(H−x)²"
+  }
+ },
+ {
+  "kind": "BOSS",
+  "boss": true,
+  "type": "input",
+  "srcQ": "GG-11",
+  "form": "<p>这棵水杉折断之前的高度为 <input class=\"num\" data-f=\"h\" inputmode=\"decimal\" placeholder=\"?\"> 米</p>",
+  "check": function(v){return XXGame.eq(XXGame.num(v.h),18)},
+  "hint": "残干 BC=5，地面 AB=12，折断段 AC 是斜边：AC=√(5²+12²)=13；原高=残干+折断段。",
+  "whySrc": "GG-11",
+  "v": {
+   "q": "一棵树在离地 9 米处折断，顶端落在离树底 12 米处，折断前高多少米？",
+   "opts": [
+    "15 米",
+    "21 米",
+    "24 米",
+    "108 米"
+   ],
+   "ans": 2
+  },
+  "test": {
+   "h": "18"
+  }
+ }
+]});
+</script></body></html>

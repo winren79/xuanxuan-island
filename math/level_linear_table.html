@@ -1,0 +1,121 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>表格变函数</title><link rel="stylesheet" href="../common.css">
+<style>.hud{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}
+.msg{min-height:28px;margin:8px 0;font-size:18px}.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}
+.tag{display:inline-block;color:#fff;border-radius:10px;padding:2px 10px;font-size:16px}.scene svg{width:100%;height:auto;display:block}
+select.sel{font-size:20px;padding:8px;border:3px solid var(--orange);border-radius:12px;font-family:inherit}</style></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回地图</a>
+<div class="hud"><span id="hearts"></span><span id="stage"></span><span id="coins"></span></div>
+<div class="grid"><div class="col1"><div class="card scene"><h2>📋 表格变函数</h2><table style="font-size:18px;background:#fff"><tr><th>x</th><td>0</td><td>1</td><td>2</td><td>3</td></tr><tr><th>y</th><td>b</td><td>b+k</td><td>b+2k</td><td>b+3k</td></tr></table><p>一次函数高频错点：由表格求关系式。看增量定 k，看 x=0 定 b，最后代两组数据检验！</p></div></div>
+<div class="card" id="box"></div></div></div>
+<script src="../common.js"></script><script src="data.js"></script><script src="levels.js"></script><script src="chapters.js"></script>
+<script>
+XXGame.quiz({subject:"math", levelId:"linear_table", items:[
+ {
+  "kind": "小怪①·看增量",
+  "type": "mc",
+  "q": "表格：x 依次为 0，1，2；y 依次为 1，3，5。y 与 x 的关系式是？",
+  "opts": [
+   "y=2x+1",
+   "y=x+1",
+   "y=2x",
+   "y=3x"
+  ],
+  "ans": 0,
+  "hint": "x 每增加 1，y 增加 2，k=2；x=0 时 y=1，b=1。",
+  "v": {
+   "q": "x 依次为 0，1，2；y 依次为 −3，−1，1，关系式是？",
+   "opts": [
+    "y=2x−3",
+    "y=−3x+2",
+    "y=x−3",
+    "y=2x+3"
+   ],
+   "ans": 0
+  },
+  "whySrc": "YH-21-06"
+ },
+ {
+  "kind": "小怪②·k 的符号",
+  "type": "mc",
+  "q": "表格：x 依次为 −1，0，1；y 依次为 4，2，0。关系式是？",
+  "opts": [
+   "y=2x+2",
+   "y=−2x+2",
+   "y=−2x",
+   "y=x+2"
+  ],
+  "ans": 1,
+  "hint": "x 每增加 1，y 减少 2，k=−2；x=0 时 y=2，b=2。代 x=−1 检验：−2×(−1)+2=4。",
+  "v": {
+   "q": "x 依次为 0，2，4；y 依次为 5，4，3，关系式是？",
+   "opts": [
+    "y=−½x+5",
+    "y=−x+5",
+    "y=½x+5",
+    "y=−2x+5"
+   ],
+   "ans": 0
+  },
+  "why": {
+   "错因": "只看到 y 在变，没注意是减少，k 的符号弄反；写完没代点检验。",
+   "概念": "y 随 x 增大而减小时 k<0；x=0 对应的 y 就是 b。",
+   "公式": "k=Δy÷Δx；b=x=0 时的 y"
+  }
+ },
+ {
+  "kind": "小怪③·正比例",
+  "type": "mc",
+  "q": "表格：x 依次为 1，2，3；y 依次为 −4，−8，−12。关系式及函数类型是？",
+  "opts": [
+   "y=4x（正比例函数）",
+   "y=−4x（正比例函数）",
+   "y=−x−3（一次函数）",
+   "y=−4x−8（一次函数）"
+  ],
+  "ans": 1,
+  "hint": "x 每增加 1，y 减少 4，k=−4；b=y−kx=−4−(−4)×1=0，所以是正比例函数。",
+  "v": {
+   "q": "x 依次为 2，4，6；y 依次为 1，2，3，关系式是？",
+   "opts": [
+    "y=½x（正比例函数）",
+    "y=2x（正比例函数）",
+    "y=x−1（一次函数）",
+    "y=x+1（一次函数）"
+   ],
+   "ans": 0
+  },
+  "why": {
+   "错因": "x 不从 0 开始就不会求 b；b=0 时没想到填“正比例”。",
+   "概念": "y=kx（k≠0）是正比例函数，也是特殊的一次函数；能填正比例就填正比例。",
+   "公式": "b=y−kx（代任一组数据）"
+  }
+ },
+ {
+  "kind": "BOSS",
+  "boss": true,
+  "type": "mc",
+  "srcQ": "YH-25-02",
+  "q": "请选出正确选项：",
+  "opts": [
+   "A",
+   "B",
+   "C",
+   "D"
+  ],
+  "ans": 1,
+  "hint": "代点检验：x=3 时 y=0，只有 B 满足；再用 (−7，−10) 验证：−7−3=−10。",
+  "whySrc": "YH-25-02",
+  "v": {
+   "q": "x 依次为 −1，1，3；y 依次为 −5，−1，3，关系式是？",
+   "opts": [
+    "y=2x−3",
+    "y=x−4",
+    "y=2x+3",
+    "y=−2x−3"
+   ],
+   "ans": 0
+  }
+ }
+]});
+</script></body></html>

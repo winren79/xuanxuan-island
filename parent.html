@@ -1,0 +1,54 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>家长中心</title><link rel="stylesheet" href="common.css"></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回首页</a><h1>👨‍👩‍👦 家长中心</h1><div id="app"></div></div>
+<script src="common.js"></script><script src="math/levels.js"></script><script src="physics/levels.js"></script>
+<script>
+var G=XXGame,$=function(id){return document.getElementById(id)},app=$("app"),esc=G.esc;
+function hash(s){var x=2166136261;s="xx-island:"+s;for(var i=0;i<s.length;i++){x^=s.charCodeAt(i);x=Math.imul(x,16777619)>>>0;}return x.toString(16);}
+function gate(){var p=G.load();
+ if(!p.parent.pin){app.innerHTML='<div class="card center"><h2>首次进入：设置 4 位家长密码</h2><p><input class="pin" id="p1" type="password" inputmode="numeric" maxlength="4" placeholder="••••"></p><p><input class="pin" id="p2" type="password" inputmode="numeric" maxlength="4" placeholder="再输一次"></p><div class="msg" id="pm"></div><button class="btn orange" id="pset">设置密码</button></div>';
+  $("pset").onclick=function(){var a=$("p1").value,b=$("p2").value;if(!/^\d{4}$/.test(a))return $("pm").innerHTML='<span class="bad">请输入 4 位数字</span>';if(a!==b)return $("pm").innerHTML='<span class="bad">两次不一致</span>';
+   var q=G.load();q.parent.pin=hash(a);G.save(q);sessionStorage.setItem("xx-parent-ok","1");main();};return;}
+ if(sessionStorage.getItem("xx-parent-ok")==="1")return main();
+ app.innerHTML='<div class="card center"><h2>🔒 请输入家长密码</h2><p><input class="pin" id="p1" type="password" inputmode="numeric" maxlength="4" placeholder="••••"></p><div class="msg" id="pm"></div><button class="btn orange" id="pin">进入</button></div>';
+ $("pin").onclick=function(){if(hash($("p1").value)===G.load().parent.pin){sessionStorage.setItem("xx-parent-ok","1");main();}else $("pm").innerHTML='<span class="bad">密码不对</span>';};}
+var TABS=[["report","📋 周报"],["redeem","🎁 兑换记录"],["pool","🎰 奖池"],["th","⭐ 门槛"],["read","🎤 朗读审核"],["pwd","🔑 密码"]];
+function main(){var cur=(location.hash||"#report").slice(1);if(!TABS.some(function(t){return t[0]===cur}))cur="report";
+ app.innerHTML='<div class="bar" id="bar"></div><div class="tabs">'+TABS.map(function(t){return '<button id="tab-'+t[0]+'" class="'+(t[0]===cur?"on":"")+'">'+t[1]+'</button>'}).join("")+'</div><div id="pane"></div>';
+ G.bar($("bar"));TABS.forEach(function(t){$("tab-"+t[0]).onclick=function(){location.hash=t[0];main();}});({report:report,redeem:redeem,pool:pool,th:th,read:read,pwd:pwd})[cur]();}
+function report(){var p=G.load(),t=G.totals(),todo=p.redeem.filter(function(r){return r.status==="待兑现"}).length;
+ $("pane").innerHTML='<div class="card"><h2>本周概览</h2><p>⭐ 星星 '+t.stars+'　🪙 金币 '+t.coins+'　🎁 已开盲盒 '+p.boxes.granted+' 个　待兑现 '+todo+' 项</p></div>'+G.reportHTML();}
+function redeem(){var p=G.load(),h='<div class="card"><h2>🎁 兑换记录</h2>';if(!p.redeem.length)h+='<p>还没有奖品记录</p>';
+ else{h+='<table><tr><th>日期</th><th>奖品</th><th>状态</th><th></th></tr>';p.redeem.forEach(function(r){h+='<tr><td>'+r.date+'</td><td>'+G.prizeLabel(r)+'<br><small>'+esc(r.source)+'</small></td><td><span class="chip '+(r.status==="已兑现"?"done":"todo")+'">'+r.status+'</span></td><td>'+
+  (r.type==="coins"?'<small>自动到账</small>':'<button class="opt rd" data-id="'+r.id+'" style="min-height:40px;font-size:15px">'+(r.status==="已兑现"?"改回待兑现":"标记已兑现")+'</button>')+'</td></tr>'});h+='</table>';}
+ $("pane").innerHTML=h+'</div>';[].forEach.call(document.querySelectorAll(".rd"),function(b){b.onclick=function(){var q=G.load();q.redeem.forEach(function(r){if(r.id===b.dataset.id)r.status=r.status==="已兑现"?"待兑现":"已兑现"});G.save(q);redeem();}});}
+function pool(){var s=G.load().settings,types=G.TYPE_NAMES;
+ function tbl(name,title){return '<div class="card"><h2>'+title+'</h2><table class="pool" id="pt-'+name+'"><tr><th>奖品名称</th><th>类型</th><th>数量</th><th>权重</th><th></th></tr>'+s.pools[name].map(row).join("")+'</table><button class="btn ghost add" data-p="'+name+'">＋ 添加奖品</button></div>';}
+ function row(x){return '<tr><td><input class="pn" value="'+esc(x.name)+'"></td><td><select class="pt">'+Object.keys(types).map(function(k){return '<option value="'+k+'"'+(k===x.type?" selected":"")+'>'+types[k]+'</option>'}).join("")+'</select></td><td><input class="pa" type="number" min="0" value="'+(x.amount||0)+'"></td><td><input class="pw" type="number" min="0" value="'+x.weight+'"></td><td><button class="opt del" style="min-height:36px;font-size:14px">删</button></td></tr>';}
+ $("pane").innerHTML='<p>类型说明：周末时间（自动标注“周末使用”，数量=分钟）；现金（数量=元，<b>单次最多 20 元</b>）；金币（自动到账）；小要求/其他（家长兑现）。权重越大越容易抽到，0=不出现。</p>'+tbl("box","🎁 盲盒奖池（星星门槛解锁）")+tbl("chest","🧰 宝箱奖池（章节通关）")+'<div class="msg" id="pmsg"></div><button class="btn green" id="psave">保存奖池</button><button class="btn ghost" id="preset">恢复默认</button>';
+ function bindDel(){[].forEach.call(document.querySelectorAll(".del"),function(b){b.onclick=function(){b.closest("tr").remove()}})}bindDel();
+ [].forEach.call(document.querySelectorAll(".add"),function(b){b.onclick=function(){$("pt-"+b.dataset.p).insertAdjacentHTML("beforeend",row({name:"",type:"other",amount:0,weight:1}));bindDel();}});
+ $("preset").onclick=function(){var q=G.load();q.settings.pools=JSON.parse(JSON.stringify(G.DEFAULT_POOLS));G.save(q);pool();};
+ $("psave").onclick=function(){var out={},err="";["box","chest"].forEach(function(n){out[n]=[];[].forEach.call($("pt-"+n).querySelectorAll("tr"),function(tr,i){if(!i)return;
+   var x={name:tr.querySelector(".pn").value.trim(),type:tr.querySelector(".pt").value,amount:+tr.querySelector(".pa").value,weight:+tr.querySelector(".pw").value};
+   if(!x.name)err="有奖品没写名称";else if(!(x.weight>=0))err="权重要是 ≥0 的数字";else if(x.type==="cash"&&!(x.amount>0&&x.amount<=G.CASH_MAX))err="现金单次最多 "+G.CASH_MAX+" 元（"+x.name+"）";
+   else if(x.type==="coins"&&!(x.amount>0))err="金币数量要大于 0（"+x.name+"）";out[n].push(x);});
+   if(!out[n].some(function(x){return x.weight>0}))err=(n==="box"?"盲盒":"宝箱")+"奖池至少要有一个权重>0的奖品";});
+  if(err){$("pmsg").innerHTML='<span class="bad">❌ '+esc(err)+'，未保存</span>';return;}var q=G.load();q.settings.pools=out;G.save(q);$("pmsg").innerHTML='<span class="ok">✅ 已保存</span>';};}
+function th(){var s=G.load().settings,t=G.totals();
+ $("pane").innerHTML='<div class="card"><h2>⭐ 星星门槛</h2><p>当前星星 '+t.stars+'，下一个盲盒在 '+G.nextThreshold(t.stars)+' ⭐。</p><p>门槛（从小到大，逗号分隔）：<br><input id="tl" style="width:100%;font-size:20px;padding:8px;border:3px solid var(--orange);border-radius:12px" value="'+s.thresholds.join(",")+'"></p><p>最后一个门槛之后每 <input id="ts" class="num" type="number" min="1" value="'+s.step+'"> 颗再解锁一个</p><div class="msg" id="tmsg"></div><button class="btn green" id="tsave">保存门槛</button></div>';
+ $("tsave").onclick=function(){var a=$("tl").value.split(/[,，\s]+/).filter(Boolean).map(Number),st=+$("ts").value;
+  var ok=a.length&&a.every(function(x,i){return x>0&&Math.floor(x)===x&&(!i||x>a[i-1])})&&st>0&&Math.floor(st)===st;
+  if(!ok){$("tmsg").innerHTML='<span class="bad">❌ 门槛要是递增的正整数</span>';return;}var q=G.load();q.settings.thresholds=a;q.settings.step=st;G.save(q);$("tmsg").innerHTML='<span class="ok">✅ 已保存（已经开过的盲盒不会收回）</span>';};}
+function read(){$("pane").innerHTML='<div class="card"><h2>🎤 朗读审核</h2><div id="rl">读取中…</div></div>';
+ G.listRecordings().then(function(list){if(!list.length){$("rl").innerHTML='<p>暂无朗读录音</p>';return;}
+  $("rl").innerHTML=list.map(function(r){return '<div class="card" style="margin:8px 0"><p><b>'+r.date+'</b> <span class="chip '+(r.status==="已通过"?"done":"todo")+'">'+r.status+'</span> '+(r.secs?r.secs+' 秒':'')+'</p><p style="font-size:15px">'+G.nl(r.text)+'</p>'+
+   (r.blob?'<audio controls preload="none" data-id="'+r.id+'" style="width:100%"></audio>':'<p><small>'+esc(r.note||"无录音")+'</small></p>')+
+   (r.status==="待审核"?'<button class="btn green pass" data-id="'+r.id+'">✅ 通过（+'+G.READ_COINS+'🪙）</button><button class="btn ghost fail" data-id="'+r.id+'">再读一次</button>':(r.status==="已通过"?'<small>'+(r.awarded?"已发 "+G.READ_COINS+" 金币":"这张卡当天已奖励过，未重复发")+'</small>':''))+'</div>'}).join("");
+  list.forEach(function(r){var a=document.querySelector('audio[data-id="'+r.id+'"]');if(a&&r.blob)a.src=URL.createObjectURL(r.blob);});
+  [].forEach.call(document.querySelectorAll(".pass,.fail"),function(b){b.onclick=function(){G.reviewRecording(b.dataset.id,b.classList.contains("pass")).then(function(){G.refreshBars();read();});}});});}
+function pwd(){$("pane").innerHTML='<div class="card center"><h2>🔑 修改家长密码</h2><p><input class="pin" id="o1" type="password" maxlength="4" inputmode="numeric" placeholder="旧密码"></p><p><input class="pin" id="n1" type="password" maxlength="4" inputmode="numeric" placeholder="新密码"></p><div class="msg" id="wm"></div><button class="btn orange" id="wsave">修改</button><button class="btn ghost" id="lock">退出家长中心</button></div>';
+ $("wsave").onclick=function(){var q=G.load();if(hash($("o1").value)!==q.parent.pin)return $("wm").innerHTML='<span class="bad">旧密码不对</span>';if(!/^\d{4}$/.test($("n1").value))return $("wm").innerHTML='<span class="bad">新密码要 4 位数字</span>';q.parent.pin=hash($("n1").value);G.save(q);$("wm").innerHTML='<span class="ok">已修改</span>';};
+ $("lock").onclick=function(){sessionStorage.removeItem("xx-parent-ok");location.href="index.html";};}
+gate();
+</script></body></html>

@@ -1,0 +1,118 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>整数部分大侦探</title><link rel="stylesheet" href="../common.css">
+<style>.hud{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}
+.msg{min-height:28px;margin:8px 0;font-size:18px}.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}
+.tag{display:inline-block;color:#fff;border-radius:10px;padding:2px 10px;font-size:16px}.scene svg{width:100%;height:auto;display:block}
+select.sel{font-size:20px;padding:8px;border:3px solid var(--orange);border-radius:12px;font-family:inherit}</style></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回地图</a>
+<div class="hud"><span id="hearts"></span><span id="stage"></span><span id="coins"></span></div>
+<div class="grid"><div class="col1"><div class="card scene"><h2>🔍 整数部分大侦探</h2><svg viewBox="0 0 300 120"><rect width="300" height="120" rx="14" fill="#FFF9EF"/><line x1="20" y1="70" x2="280" y2="70" stroke="#3a2a1a" stroke-width="3"/>
+<g font-size="16" text-anchor="middle"><line x1="30" y1="62" x2="30" y2="78" stroke="#3a2a1a" stroke-width="3"/><text x="30" y="98">1</text><line x1="90" y1="62" x2="90" y2="78" stroke="#3a2a1a" stroke-width="3"/><text x="90" y="98">2</text><line x1="150" y1="62" x2="150" y2="78" stroke="#3a2a1a" stroke-width="3"/><text x="150" y="98">3</text><line x1="210" y1="62" x2="210" y2="78" stroke="#3a2a1a" stroke-width="3"/><text x="210" y="98">4</text><line x1="270" y1="62" x2="270" y2="78" stroke="#3a2a1a" stroke-width="3"/><text x="270" y="98">5</text></g>
+<circle cx="117" cy="70" r="8" fill="#C01F1F"/><text x="117" y="45" font-size="18" text-anchor="middle" fill="#C01F1F">√6≈2.45</text><text x="150" y="20" font-size="14" text-anchor="middle">2&lt;√6&lt;3 → 整数部分 2</text></svg><p>实数高频错点：无理数的整数部分与小数部分。先夹逼：n²&lt;T&lt;(n+1)²，整数部分 n，小数部分 √T−n。</p></div></div>
+<div class="card" id="box"></div></div></div>
+<script src="../common.js"></script><script src="data.js"></script><script src="levels.js"></script><script src="chapters.js"></script>
+<script>
+XXGame.quiz({subject:"math", levelId:"real_part", items:[
+ {
+  "kind": "小怪①·整数部分",
+  "type": "mc",
+  "q": "√10 的整数部分是？",
+  "opts": [
+   "3",
+   "4",
+   "10",
+   "5"
+  ],
+  "ans": 0,
+  "hint": "9<10<16，所以 3<√10<4，整数部分是 3。",
+  "v": {
+   "q": "√30 的整数部分是？",
+   "opts": [
+    "5",
+    "6",
+    "4",
+    "15"
+   ],
+   "ans": 0
+  },
+  "whySrc": "GK-16b"
+ },
+ {
+  "kind": "小怪②·小数部分",
+  "type": "mc",
+  "q": "√13 的小数部分是？",
+  "opts": [
+   "√13−3",
+   "3−√13",
+   "√13−4",
+   "0.6"
+  ],
+  "ans": 0,
+  "hint": "3<√13<4，小数部分=原数−整数部分=√13−3。",
+  "v": {
+   "q": "√8 的小数部分是？",
+   "opts": [
+    "√8−3",
+    "2−√8",
+    "√8−2",
+    "0.8"
+   ],
+   "ans": 2
+  },
+  "whySrc": "FX2-19"
+ },
+ {
+  "kind": "小怪③·整体代入",
+  "type": "mc",
+  "q": "已知 √5 的小数部分为 a，则 a+2 = ？",
+  "opts": [
+   "√5",
+   "√5+2",
+   "4",
+   "√5−4"
+  ],
+  "ans": 0,
+  "hint": "2<√5<3，a=√5−2，a+2=(√5−2)+2=√5。",
+  "v": {
+   "q": "已知 √11 的整数部分为 b，则 b² = ？",
+   "opts": [
+    "9",
+    "11",
+    "16",
+    "3"
+   ],
+   "ans": 0
+  },
+  "why": {
+   "错因": "求出小数部分后不会整体代入，或把小数部分写反成 2−√5。",
+   "概念": "小数部分 a=√5−2，代入时整体加括号：a+2=(√5−2)+2。",
+   "公式": "a=√T−n；代入后合并"
+  }
+ },
+ {
+  "kind": "BOSS",
+  "boss": true,
+  "type": "input",
+  "srcQ": "LX-18c",
+  "q": "请回答第(3)问：",
+  "form": "<p>m 的整数部分是 <input class=\"num\" data-f=\"i\" inputmode=\"numeric\" placeholder=\"?\"></p><p>m 的小数部分是 <select class=\"sel\" data-f=\"d\"><option value=\"\">请选择</option><option>2+√6</option><option>√6−2</option><option>√6−4</option><option>4−√6</option></select></p>",
+  "check": function(v){return XXGame.eq(XXGame.num(v.i),4)&&v.d==="√6−2"},
+  "hint": "2<√6<3，所以 4<2+√6<5；整数部分是 4（不要写成 m=4），小数部分=m−4，化到最简。",
+  "whySrc": "LX-18c",
+  "v": {
+   "q": "若 m=1+√3，则 m 的整数部分和小数部分分别是？",
+   "opts": [
+    "2；√3−1",
+    "1；√3",
+    "2；√3+1",
+    "3；√3−2"
+   ],
+   "ans": 0
+  },
+  "test": {
+   "i": "4",
+   "d": "√6−2"
+  }
+ }
+]});
+</script></body></html>

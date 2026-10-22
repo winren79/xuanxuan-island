@@ -1,0 +1,84 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>坐标系三角形面积</title><link rel="stylesheet" href="../common.css">
+<style>
+#cv{width:100%;background:#FFFDF7;border:3px solid #F2C27A;border-radius:16px;touch-action:none;display:block}
+.hud{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}
+.info{display:flex;gap:6px;justify-content:space-around;font-size:17px;margin-top:6px;flex-wrap:wrap}
+.info b{color:var(--red)}
+.msg{min-height:28px;margin:8px 0;font-size:18px}
+.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}
+.row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:22px;margin:8px 0}
+.tag{display:inline-block;color:#fff;border-radius:10px;padding:2px 10px;font-size:16px}
+</style></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回地图</a>
+<div class="hud"><span id="hearts"></span><span id="stage"></span><span id="coins"></span></div>
+<div class="grid"><div class="col1"><canvas id="cv" width="680" height="560"></canvas>
+<div class="info" id="info"></div></div>
+<div class="card" id="box"></div></div>
+</div>
+<script src="../common.js"></script><script src="data.js"></script><script src="levels.js"></script><script src="chapters.js"></script>
+<script>
+var $=function(id){return document.getElementById(id)};
+var ITEMS=[
+ {kind:"小怪①",type:"mc",scene:{pts:{A:[-2,0],B:[4,0],C:[1,5]},tri:["A","B","C"],view:[-3,6,-1,6]},
+  q:"A(−2,0)、B(4,0)、C(1,5)，△ABC 的面积是？",opts:["15","30","12","20"],ans:0,
+  hint:"AB 躺在 x 轴上：底 AB=4−(−2)=6，高=C 到 x 轴的距离=5，S=½×6×5。",
+  why:{"错因":"没找准底和高：底是落在 x 轴上的 AB，高是 C 到 x 轴的距离（C 的纵坐标）。","概念":"一边在坐标轴上的三角形：这条边作底，第三个顶点到该轴的距离作高。","公式":"S=½×|x₂−x₁|×|y₃|"},
+  v:{q:"A(−1,0)、B(3,0)、C(2,3)，△ABC 面积？",opts:["12","6","4.5","8"],ans:1}},
+ {kind:"小怪②",type:"mc",scene:{pts:{A:[1,1],B:[6,3],C:[3,7]},tri:["A","B","C"],box:[1,6,1,7],view:[-1,8,-1,8]},
+  q:"A(1,1)、B(6,3)、C(3,7)，用“画外框再减角”求 △ABC 面积：",opts:["30","17","13","15"],ans:2,
+  hint:"外框 x 从 1 到 6、y 从 1 到 7：5×6=30；三个角：½×5×2=5，½×3×4=6，½×2×6=6，共 17；30−17=13。",
+  why:{"错因":"斜放的三角形找不到底和高，硬算容易错；外框法要减去三个角上的直角三角形。","概念":"割补法：用水平竖直的长方形把三角形框住，再减去角上的直角三角形。","公式":"S=外框面积−S₁−S₂−S₃"},
+  v:{q:"A(0,0)、B(4,1)、C(1,3)，外框法求面积？",opts:["6.5","12","5.5","11"],ans:2}},
+ {kind:"小怪③",type:"mc",scene:{pts:{O:[0,0],A:[4,0],"P₁":[0,3],"P₂":[0,-3]},tri:["O","A","P₁"],tri2:["O","A","P₂"],view:[-2,6,-4,4]},
+  q:"O(0,0)、A(4,0)，点 P(0,m) 在 y 轴上，△OAP 面积为 6，P 的坐标是？",opts:["(0,3)","(0,−3)","(0,3) 或 (0,−3)","(0,6) 或 (0,−6)"],ans:2,
+  hint:"S=½×OA×|m|=½×4×|m|=6 → |m|=3，绝对值方程有两个解！",whySrc:"FX1-16",
+  v:{q:"O(0,0)、A(6,0)、P(0,m)，△OAP 面积 12，P？",opts:["(0,4)","(0,4) 或 (0,−4)","(0,2) 或 (0,−2)","(0,−4)"],ans:1}},
+ {kind:"BOSS (1)·选底",type:"mc",boss:true,srcQ:"YH-25-08b",q:"第1步：△OPA 选哪条边作底？（先拖动 P 点观察）",
+  opts:["OE = 8","OA = 6","OF = 6","AE = 2"],ans:1,whySrc:"YH-25-08b",
+  hint:"△OPA 的边 OA 在 x 轴上，O(0,0)、A(6,0)，用它当底最方便，底=6。",
+  v:{q:"直线 y=−x+4 上的点 P 与 O、A(2,0) 组成 △OPA，选哪条边作底？",opts:["OP","PA","OA","都一样"],ans:2}},
+ {kind:"BOSS (1)·选高",type:"mc",boss:true,q:"第2步：以 OA 为底，高是？",opts:["P 的横坐标 x","OP 的长","P 的纵坐标 y","PA 的长"],ans:2,whySrc:"YH-25-08b",
+  hint:"底在 x 轴上，高=P 到 x 轴的距离；P 在第一象限，所以就是 y。",
+  v:{q:"上题 y=−x+4、A(2,0)，以 OA 为底，高是？",opts:["P 的纵坐标 y","P 的横坐标 x","OP 的长","2"],ans:0}},
+ {kind:"BOSS (1)·写式子",type:"input",boss:true,q:"第3步：写出 S 与 x 的关系式和 x 的范围：",whySrc:"YH-25-08b",
+  form:'<div class="row">S = <input class="num" id="fa" data-f="a" placeholder="?"> x + <input class="num" id="fb" data-f="b" placeholder="?"></div><div class="row">（<input class="num" id="flo" data-f="lo" placeholder="?"> &lt; x &lt; <input class="num" id="fhi" data-f="hi" placeholder="?">）</div><small>分数可写 −9/4</small>',
+  check:function(v){var n=XXGame.num,e=XXGame.eq;return e(n(v.a),-9/4)&&e(n(v.b),18)&&e(n(v.lo),0)&&e(n(v.hi),8)},test:{a:"-9/4",b:"18",lo:"0",hi:"8"},
+  hint:"S=½×6×y=3y，代入 y=−¾x+6；P 在第一象限：x>0 且 y>0 → x<8。",
+  v:{q:"y=−x+4、A(2,0)，P 在第一象限，S△OPA 与 x 的关系？",opts:["S=−2x+8（0<x<4）","S=−x+4（0<x<4）","S=x+4（0<x<2）","S=−½x+2（0<x<8）"],ans:1}},
+ {kind:"BOSS (2)",type:"input",boss:true,q:"第4步：当 S=9 时，求 P 的坐标。（可拖动 P 验证）",whySrc:"YH-25-08b",
+  form:'<div class="row">P( <input class="num" id="px" data-f="x" placeholder="x"> , <input class="num" id="py" data-f="y" placeholder="y"> )</div>',
+  check:function(v){return XXGame.eq(XXGame.num(v.x),4)&&XXGame.eq(XXGame.num(v.y),3)},test:{x:"4",y:"3"},
+  hint:"令 −9/4·x+18=9 → x=4，再代回 y=−¾x+6。",
+  v:{q:"y=−x+4、A(2,0)，S△OPA=1 时 P？",opts:["(1,3)","(3,1)","(2,2)","(4,0)"],ans:1}}
+];
+var Px=3,cur=null,cv=$("cv"),ctx=cv.getContext("2d"),view,W=cv.width,H=cv.height;
+function tx(x){return (x-view[0])/(view[1]-view[0])*W} function ty(y){return H-(y-view[2])/(view[3]-view[2])*H}
+function wx(px){return view[0]+px/W*(view[1]-view[0])}
+function axes(){ctx.clearRect(0,0,W,H);ctx.strokeStyle="#eee";ctx.lineWidth=1;
+ for(var i=Math.ceil(view[0]);i<=view[1];i++){ctx.beginPath();ctx.moveTo(tx(i),0);ctx.lineTo(tx(i),H);ctx.stroke()}
+ for(i=Math.ceil(view[2]);i<=view[3];i++){ctx.beginPath();ctx.moveTo(0,ty(i));ctx.lineTo(W,ty(i));ctx.stroke()}
+ ctx.strokeStyle="#555";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,ty(0));ctx.lineTo(W,ty(0));ctx.moveTo(tx(0),0);ctx.lineTo(tx(0),H);ctx.stroke();
+ ctx.fillStyle="#555";ctx.font="22px sans-serif";ctx.fillText("x",W-20,ty(0)-8);ctx.fillText("y",tx(0)+8,18)}
+function dot(p,lab,c,r){ctx.fillStyle=c||"#3a2a1a";ctx.beginPath();ctx.arc(tx(p[0]),ty(p[1]),r||7,0,7);ctx.fill();ctx.font="bold 24px sans-serif";ctx.fillText(lab,tx(p[0])+9,ty(p[1])-9)}
+function poly(ps,fill,stroke,dash){ctx.beginPath();ps.forEach(function(p,i){i?ctx.lineTo(tx(p[0]),ty(p[1])):ctx.moveTo(tx(p[0]),ty(p[1]))});ctx.closePath();
+ ctx.setLineDash(dash||[]);if(fill){ctx.fillStyle=fill;ctx.fill()}ctx.strokeStyle=stroke;ctx.lineWidth=3;ctx.stroke();ctx.setLineDash([])}
+function draw(){var it=cur;
+ if(it&&it.scene){var s=it.scene;view=s.view;axes();
+  if(s.box)poly([[s.box[0],s.box[2]],[s.box[1],s.box[2]],[s.box[1],s.box[3]],[s.box[0],s.box[3]]],null,"#D96B00",[10,8]);
+  poly(s.tri.map(function(k){return s.pts[k]}),"rgba(192,31,31,.18)","#C01F1F");
+  if(s.tri2)poly(s.tri2.map(function(k){return s.pts[k]}),"rgba(30,123,52,.18)","#1E7B34",[8,6]);
+  for(var k in s.pts)dot(s.pts[k],k);$("info").innerHTML="";return}
+ view=[-1,9.5,-1,7.4];axes();var y=-0.75*Px+6,P=[Px,y];
+ ctx.strokeStyle="#1E7B34";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(tx(-0.5),ty(6.375));ctx.lineTo(tx(9),ty(-0.75));ctx.stroke();
+ poly([[0,0],P,[6,0]],"rgba(192,31,31,.2)","#C01F1F");
+ ctx.setLineDash([6,6]);ctx.strokeStyle="#D96B00";ctx.beginPath();ctx.moveTo(tx(Px),ty(y));ctx.lineTo(tx(Px),ty(0));ctx.stroke();ctx.setLineDash([]);
+ dot([0,0],"O");dot([8,0],"E");dot([0,6],"F");dot([6,0],"A");dot(P,"P","#C01F1F",13);
+ $("info").innerHTML="<span>P(<b>"+Px.toFixed(2)+"</b>, <b>"+y.toFixed(2)+"</b>)</span><span>底 OA=<b>6</b></span><span>高=<b>"+y.toFixed(2)+"</b></span><span>S=<b>"+(3*y).toFixed(2)+"</b></span>"}
+var drag=false;
+function setP(e){var r=cv.getBoundingClientRect(),x=wx((e.clientX-r.left)/r.width*W);Px=Math.max(0.05,Math.min(7.95,Math.round(x*20)/20));draw()}
+cv.addEventListener("pointerdown",function(e){if(cur&&cur.scene)return;drag=true;try{cv.setPointerCapture(e.pointerId)}catch(_){}setP(e)});
+cv.addEventListener("pointermove",function(e){if(drag)setP(e)});
+cv.addEventListener("pointerup",function(){drag=false});
+XXGame.quiz({subject:"math",levelId:"level1_area",items:ITEMS,onItem:function(it){cur=it;draw()},onEnd:function(){$("info").innerHTML=""}});
+</script></body></html>

@@ -1,0 +1,19 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>轩轩闯关岛</title><link rel="stylesheet" href="common.css"></head><body><div class="wrap">
+<h1>🏝️ 轩轩闯关岛</h1><div class="bar" id="bar"></div>
+<div class="grid"><div class="col1">
+<a class="btn red big" id="go-math" href="math/index.html">🔢 数学岛</a>
+<a class="btn green big" id="go-physics" href="physics/index.html">⚡ 物理岛</a><a class="btn orange" href="variants.html?s=math">📐 数学变式练习</a><a class="btn orange" href="variants.html?s=physics">⚡ 物理变式练习</a>
+<div class="card"><b>🎁 下一个盲盒</b> <span id="nextbox"></span><div class="progress"><i id="nextbar"></i></div></div>
+</div><div class="col2">
+<div class="card"><h2>🔢 数学错题</h2><div id="w-math"></div></div><div class="card"><h2>⚡ 物理错题</h2><div id="w-phy"></div></div>
+</div></div></div>
+<div class="footer static"><a class="btn orange" id="go-parent" href="parent.html">👨‍👩‍👦 家长中心</a></div>
+<script src="common.js"></script><script src="math/levels.js"></script><script src="math/data.js"></script><script src="physics/levels.js"></script><script src="physics/data.js"></script><script>
+document.getElementById("w-math").innerHTML=XXGame.wrongHTML("math",window.MATH_DATA,window.MATH_LEVELS,"math/");
+document.getElementById("w-phy").innerHTML=XXGame.wrongHTML("physics",window.PHYSICS_DATA,window.PHYSICS_LEVELS,"physics/");
+XXGame.bar(document.getElementById("bar"));
+(function(){var t=XXGame.totals(),n=XXGame.nextThreshold(t.stars),l=XXGame.thresholdList(t.stars),prev=0;l.forEach(function(x){if(x<=t.stars)prev=x;});
+ document.getElementById("nextbox").textContent="⭐ "+t.stars+" / "+n+"（还差 "+(n-t.stars)+" 颗）";document.getElementById("nextbar").style.width=Math.round((t.stars-prev)/(n-prev)*100)+"%";})();
+XXGame.processRewards(null);
+</script></body></html>
