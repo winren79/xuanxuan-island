@@ -115,7 +115,10 @@
     var prevSeq=null;
     ch.levels.forEach(function(id,i){var l=lv.filter(function(x){return x.id===id;})[0];if(!l)return;var b=G.levelStars(subject,id);
       var lock=l.seq&&prevSeq&&G.levelStars(subject,prevSeq)<1;if(l.seq)prevSeq=id;
-      var t=(l.icon||"")+' 第'+(i+1)+'关 '+(l.boss?'👑 Boss · ':'')+esc(l.title)+'<br><span style="font-size:18px">'+(lock?'🔒 先通过上一关':"⭐".repeat(b)+"☆".repeat(3-b))+'</span>';
+      var D=window[upper(subject)+"_DATA"],lids=l.items||(l.boss?[l.boss]:[]),cnt={"未练":0,"已练":0,"已过关":0};
+      lids.forEach(function(x){var di=G.dataItem(subject,x);if(di)cnt[G.itemStatus(subject,di)]++;});
+      var tags=lids.length?' '+["未练","已练","已过关"].filter(function(k){return cnt[k];}).map(function(k){return G.statusTag(k+(lids.length>1?" "+cnt[k]:""));}).join(""):"";
+      var t=(l.icon||"")+' 第'+(i+1)+'关 '+(l.boss?'👑 Boss · ':'')+esc(l.title)+'<br><span style="font-size:18px">'+(lock?'🔒 先通过上一关':"⭐".repeat(b)+"☆".repeat(3-b))+'</span>'+tags;
       h+=lock?'<a class="btn ghost lockedlv" id="lv-'+esc(id)+'" style="opacity:.55;pointer-events:none">'+t+'</a>'
         :'<a class="btn '+(subject==="physics"?"green":"red")+'" id="lv-'+esc(id)+'" href="'+(base||"")+esc(l.file)+'">'+t+'</a>';});
     return h+'<small>本章所有关卡都拿到 ≥1⭐ 就通关，小船开往下一个岛并开宝箱！</small>';};
@@ -271,12 +274,12 @@
     var c={"未练":0,"已练":0,"已过关":0},news=[],rec=load().subjects[subject]||{},passed={};
     (levels||[]).forEach(function(l){if(l.boss&&rec[l.id]&&rec[l.id].bestStars>=2)passed[l.boss]=l;});
     var items=(data&&data.items)||[];
-    items.forEach(function(it){var st=passed[it.id]?"已过关":it["状态"];c[st]=(c[st]||0)+1;
+    items.forEach(function(it){var st=G.itemStatus(subject,it);c[st]=(c[st]||0)+1;
       if(it["new"]){var lv=(levels||[]).filter(function(l){return l.boss===it.id;})[0];news.push({it:it,level:lv,status:st});}});
     return {count:c,total:items.length,news:news,updated:data&&data.updated};};
   G.wrongHTML=function(subject,data,levels,base){
     var s=G.wrongStats(subject,data,levels);if(!s.total)return '<p>暂无错题数据</p>';
-    var h='<div class="stat3"><span style="background:#C01F1F">未练 '+s.count["未练"]+'</span><span style="background:#D96B00">已练 '+s.count["已练"]+'</span><span style="background:#1E7B34">已过关 '+s.count["已过关"]+'</span></div>';
+    var h='<div class="stat3"><span style="background:#C01F1F">未练 '+s.count["未练"]+'</span><span style="background:#D9A400">已练 '+s.count["已练"]+'</span><span style="background:#1E7B34">已过关 '+s.count["已过关"]+'</span></div>';
     if(s.news.length){h+='<div class="newlist"><b><span class="new">NEW</span> 本次Boss关</b>';
       s.news.forEach(function(n){h+='<div class="newitem">'+(n.level?'<a href="'+(base||"")+esc(n.level.file)+'">':'')+'<b>'+esc(n.it.id)+'</b> '+esc(String(n.it["知识点"]).split(/[；;]/)[0])+
         (n.level?' 👉 Boss：'+esc(n.level.title)+'</a>':' <small>（关卡制作中）</small>')+' <small>['+n.status+']</small></div>';});h+='</div>';}
@@ -339,13 +342,17 @@
         '<p style="opacity:.7">'+esc(it["知识点"]||"")+'</p><div class="qtext" style="font-size:20px">'+nl(orig?it["原题"]:v.q)+'</div>'+
         (msg?'<div class="msg">'+msg+'</div>':'')+(!orig&&missed?G.whyCardHTML(card(it)):'')+
         '<p style="opacity:.75">先在草稿纸上做完，再看答案自己判对错。</p><button class="btn orange" id="show">想好了，看答案</button><div id="res"></div>';
-      $("box").innerHTML=h;if(!orig&&missed)G.bindWhyCard($("box"),card(it));
+      if(!orig){$("box").innerHTML='<span class="tag" style="background:#1E7B34">变式题 · 举一反三</span> '+G.statusTag(G.itemStatus(cfg.subject,it))+(msg?'<div class="msg">'+msg+'</div>':'')+'<div id="vw"></div>';
+        G.variantWidget($("vw"),v,{subject:cfg.subject,item:it,onDone:function(ok){varDone(ok);}});return;}
+      $("box").innerHTML=h;
       $("show").onclick=function(){this.remove();$("res").innerHTML='<div class="hint"><b>答案：</b>'+nl(orig?it["正确答案"]:v.a)+(orig?'':'<br><b>解析：</b>'+nl(v.explain||""))+'</div>'+
         '<button class="btn green" id="yes">✅ 我做对了</button><button class="btn red" id="no">❌ 我做错了</button>';$("yes").onclick=function(){mark(true);};$("no").onclick=function(){mark(false);};};}
     function nextStep(){var it=items[idx];if(step===0&&(it["变式"]||[]).length){step=1;render();}else{step=0;missed=false;idx++;idx<items.length?render():end();}}
     function mark(ok){var it=items[idx];
       if(step===0){if(ok){first++;G.correct();missed=false;nextStep();}else{missed=true;hearts--;G.wrong();if(hearts<=0&&!(it["变式"]||[]).length)return gameOver();step=1;render('<span class="bad">没关系！先看讲解卡，再做变式题'+(hearts<=0?'——答对就复活！':'，答对可复活 1 ❤️')+'</span>');}return;}
-      if(ok){G.correct();if(missed)hearts=Math.min(MAXH,hearts+1);nextStep();}else{G.wrong();if(hearts<=0)return gameOver();if(missed){hearts--;if(hearts<=0)return gameOver();}nextStep();}}
+      }
+    function varDone(ok){if(ok===null)return nextStep();/* 金币/语音/状态已由 variantWidget 处理 */
+      if(ok){if(missed)hearts=Math.min(MAXH,hearts+1);nextStep();}else{if(hearts<=0)return gameOver();if(missed){hearts--;if(hearts<=0)return gameOver();}nextStep();}}
     function gameOver(){hud();$("box").innerHTML='<h2>💔 挑战失败</h2><p>❤️ 用完了，别灰心，再来一次！</p><button class="btn red" onclick="location.reload()">重新挑战</button><a class="btn ghost" href="index.html">返回地图</a>';}
     function end(){var rate=items.length?first/items.length:1,stars=rate>=.85?3:rate>=.55?2:1,res=G.finish(cfg.subject,cfg.levelId,stars,rate);hud();
       $("box").innerHTML='<h1 id="result">🎉 通关！</h1><div style="text-align:center;font-size:48px">'+"⭐".repeat(stars)+"☆".repeat(3-stars)+'</div>'+
@@ -356,27 +363,99 @@
 
   document.addEventListener("DOMContentLoaded",musicButton);
   if(document.readyState!=="loading")musicButton();
-  /* 变式练习：数学(变式 q/a/explain，自评) + 物理(变式 q/opts/ans/explain，选择)。
-     顺序固定：按错题顺序，每题内部按原顺序（P0927-13、P1019-2 第2题“接上题”不能打乱）。*/
-  G.variantPractice=function(el,subject,data){
-    var list=[];((data&&data.items)||[]).forEach(function(it){(it["变式"]||[]).forEach(function(v,k){list.push({src:it,v:v,k:k});});});
-    var i=+(sessionStorage.getItem("xx-var-"+subject)||0);if(i>=list.length)i=0;
-    function next(){i++;sessionStorage.setItem("xx-var-"+subject,i);draw();}
-    function draw(){if(!list.length){el.innerHTML="<p>暂无变式题</p>";return;}
-      if(i>=list.length){el.innerHTML='<h2>🎉 全部变式练完！</h2><button class="btn green" id="vr">从头再练</button>';document.getElementById("vr").onclick=function(){i=0;sessionStorage.setItem("xx-var-"+subject,0);draw();};return;}
-      var x=list[i],v=x.v,h='<p style="opacity:.7">'+(i+1)+'/'+list.length+' · 来自错题 '+esc(x.src.id)+' · '+esc(x.src["知识点"]||"")+'</p><h3>变式 '+(x.k+1)+'</h3><p style="font-size:20px">'+nl(v.q)+'</p>';
-      if(v.opts){h+=v.opts.map(function(o,j){return '<button class="opt" data-j="'+j+'">'+esc(o)+'</button>';}).join("");}
-      else h+='<button class="btn orange" id="vs">想好了，看答案</button>';
-      h+='<div id="vres"></div>';el.innerHTML=h;
-      function reveal(ok){var r=document.getElementById("vres");
-        r.innerHTML=(ok===true?'<p style="color:#1E7B34;font-size:20px">✅ 答对了！</p>':ok===false?'<p style="color:#C01F1F;font-size:20px">❌ 再看看解析</p>':'')+
-          '<div class="hint"><b>答案：</b>'+nl(v.opts?v.opts[v.ans]:v.a)+'<br><b>解析：</b>'+nl(v.explain||"")+'</div>';
-        if(ok===null){r.innerHTML+='<button class="btn green" id="vy">我做对了</button><button class="btn red" id="vn">我做错了</button>';
-          document.getElementById("vy").onclick=function(){G.correct&&G.correct();reveal(true);};
-          document.getElementById("vn").onclick=function(){G.wrong&&G.wrong();reveal(false);};return;}
-        r.innerHTML+='<button class="btn green big" id="vx">下一题 →</button>';document.getElementById("vx").onclick=next;}
-      if(v.opts)[].forEach.call(el.querySelectorAll(".opt"),function(b){b.onclick=function(){if(el.querySelector("#vx"))return;var ok=+b.dataset.j===v.ans;b.classList.add("sel");if(ok){G.correct&&G.correct();}else{G.wrong&&G.wrong();}reveal(ok);};});
-      else document.getElementById("vs").onclick=function(){this.remove();reveal(null);};}
-    draw();};
+
+  /* ---------- 可作答变式题：统一格式 + 自动判分 + 逐题状态 ----------
+     变式字段：type "choice"|"fill"；stem；options["A. …"]；answer "B" 或 [[可接受…],…]；labels；anyOrder/anyOrderFrom；explain。
+     兼容旧物理格式 q/opts/ans(下标)。状态存 localStorage 进度 p.vstatus[subject][id]：未练 / 已练 / 已过关（过关不回退）。 */
+  var RANK={"未练":0,"已练":1,"已过关":2};
+  G.vNorm=function(v){if(!v)return null;var o={type:v.type,stem:v.stem||v.q||"",explain:v.explain||""};
+    if(!o.type)o.type=v.opts?"choice":"fill";
+    if(o.type==="choice"){o.options=v.options||v.opts||[];o.ans=typeof v.ans==="number"?v.ans:"ABCDEFG".indexOf(String(v.answer||"").trim().toUpperCase());
+      o.options=o.options.map(function(x,k){return /^[A-G][.．、]/.test(x)?x:"ABCDEFG"[k]+". "+x;});o.ok=o.ans>=0&&o.ans<o.options.length;}
+    else{var a=v.answer;if(typeof a==="string")a=[[a]];else if(a&&a.length&&typeof a[0]==="string")a=v.labels&&v.labels.length===a.length?a.map(function(x){return [x];}):[a];
+      o.blanks=a||[];o.labels=v.labels||o.blanks.map(function(){return "答案";});o.anyOrder=!!v.anyOrder;o.from=v.anyOrderFrom||0;o.ok=o.blanks.length>0;}
+    return o;};
+  G.itemStatus=function(subject,it){var st=((load().vstatus||{})[subject]||{})[it.id]||"未练",seed=it["状态"]||"未练";return RANK[seed]>RANK[st]?seed:st;};
+  G.setItemStatus=function(subject,id,ok){var p=load();p.vstatus=p.vstatus||{};var m=p.vstatus[subject]=p.vstatus[subject]||{};
+    var cur=m[id]||"未练",nw=ok?"已过关":"已练";if(RANK[nw]>RANK[cur])m[id]=nw;save(p);return m[id];};
+  G.statusTag=function(st){var c={"未练":"#C01F1F","已练":"#D9A400","已过关":"#1E7B34"}[String(st).split(" ")[0]]||"#888";
+    return '<span class="sttag" style="display:inline-block;background:'+c+';color:#fff;border-radius:10px;padding:1px 8px;font-size:14px;margin-left:4px">'+st+'</span>';};
+  G.statusCount=function(subject,data){var c={"未练":0,"已练":0,"已过关":0};((data&&data.items)||[]).forEach(function(it){c[G.itemStatus(subject,it)]++;});return c;};
+  G.statusSummaryHTML=function(subject,data){var c=G.statusCount(subject,data);
+    return '<div class="stat3"><span style="background:#C01F1F">未练 '+c["未练"]+'</span><span style="background:#D9A400">已练 '+c["已练"]+'</span><span style="background:#1E7B34">已过关 '+c["已过关"]+'</span></div>';};
+  /* 数学表达式数值化：√ ∛ sqrt π × ÷ ^ 隐式乘法 与 字母（多组随机值代入比较） */
+  function evalExpr(s,vars){var t=s,i=0;
+    function peek(){return t[i];}
+    function num(){var m=t.slice(i).match(/^\d+(\.\d+)?/);if(!m)throw 0;i+=m[0].length;return +m[0];}
+    function atom(){var c=peek();if(c==="("){i++;var v=add();if(t[i]!==")")throw 0;i++;return v;}
+      if(c==="√"||c==="∛"){i++;var r=pow();return c==="√"?(r<0?NaN:Math.sqrt(r)):Math.cbrt(r);}
+      if(c==="π"){i++;return Math.PI;}
+      if(/[a-z]/.test(c)){i++;if(!(c in vars))throw 0;return vars[c];}
+      return num();}
+    function pow(){var b=atom();if(t[i]==="^"){i++;var sg=1;if(t[i]==="-"){sg=-1;i++;}return Math.pow(b,sg*pow());}return b;}
+    function unary(){if(t[i]==="-"){i++;return -unary();}if(t[i]==="+"){i++;return unary();}return pow();}
+    function mul(){var v=unary();for(;;){var c=t[i];if(c==="*"){i++;v*=unary();}else if(c==="/"){i++;v/=unary();}
+      else if(c&&/[\d(√∛πa-z]/.test(c)){v*=pow();}else return v;}}
+    function add(){var v=mul();for(;;){if(t[i]==="+"){i++;v+=mul();}else if(t[i]==="-"){i++;v-=mul();}else return v;}}
+    var r=add();if(i!==t.length)throw 0;return r;}
+  function norm(s){s=String(s==null?"":s).replace(/[\uFF01-\uFF5E]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);})
+      .replace(/\u3000/g," ").replace(/[−–—﹣]/g,"-").replace(/[×·]/g,"*").replace(/÷/g,"/").replace(/sqrt/gi,"√").replace(/cbrt/gi,"∛").replace(/pi/gi,"π")
+      .replace(/\+\/-|\+-|正负/g,"±").replace(/[，、；;]/g,",").replace(/[²]/g,"^2").replace(/[³]/g,"^3").replace(/\s+/g,"").replace(/[。.]$/,"");
+    s=s.replace(/(千米|公里|km|海里|厘米|cm|毫米|mm|米|m|秒|s|个|人|度|°)$/i,"");
+    var m=s.match(/^[A-Za-z][A-Za-z0-9₁₂₃]*=(.+)$/);if(m)s=m[1]; // x=…、k=…、y=…
+    m=s.match(/^[A-Z][₁₂₃0-9]*(\(.*\))$/);if(m)s=m[1];             // P(3,4) → (3,4)
+    return s;}
+  var VARS=[{a:1.37,b:2.11,x:0.73,t:1.91,m:2.6,n:0.47,k:1.3},{a:3.3,b:-1.7,x:-2.2,t:0.35,m:-0.9,n:4.1,k:-2.4}];
+  function valEq(u,a){try{return VARS.every(function(V){var x=evalExpr(u,V),y=evalExpr(a,V);return isFinite(x)&&isFinite(y)&&Math.abs(x-y)<1e-6*Math.max(1,Math.abs(y));});}catch(e){return null;}}
+  function splitTop(s){var out=[],d=0,cur="";for(var k=0;k<s.length;k++){var c=s[k];if(c==="(")d++;if(c===")")d--;if(c===","&&d===0){out.push(cur);cur="";}else cur+=c;}out.push(cur);return out;}
+  G.matchOne=function(input,acc){var u=norm(input);if(!u)return false;
+    if(acc.charAt(0)==="~"){try{return Math.abs(evalExpr(u,{})-(+acc.slice(1)))<=0.051;}catch(e){return false;}}
+    var a=norm(acc);if(u===a)return true;
+    var pu=u.charAt(0)==="±",pa=a.charAt(0)==="±";if(pu!==pa)return false;if(pu){u=u.slice(1);a=a.slice(1);}
+    var tu=/^\(.*\)$/.test(u)&&splitTop(u.slice(1,-1)),ta=/^\(.*\)$/.test(a)&&splitTop(a.slice(1,-1));
+    if(ta&&ta.length>1){if(!tu||tu.length!==ta.length)return false;return ta.every(function(x,k){return x===tu[k]||valEq(tu[k],x)===true;});}
+    return valEq(u,a)===true;};
+  G.matchAny=function(input,list){return list.some(function(x){return G.matchOne(input,x);});};
+  /* 返回每空对错数组；anyOrder 时 from 之后的空可任意顺序（不允许一个答案重复用两次） */
+  G.checkFill=function(o,inputs){var res=inputs.map(function(){return false;}),used={};
+    o.blanks.forEach(function(acc,k){if(!o.anyOrder||k<o.from)res[k]=G.matchAny(inputs[k],acc);});
+    if(o.anyOrder){for(var k=o.from;k<inputs.length;k++){for(var j=o.from;j<o.blanks.length;j++){if(!used[j]&&G.matchAny(inputs[k],o.blanks[j])){used[j]=1;res[k]=true;break;}}}}
+    return res;};
+  G.answerText=function(o){return o.type==="choice"?o.options[o.ans]:o.blanks.map(function(a,k){return (o.labels[k]||"")+" "+a[0].replace(/^~/,"≈");}).join("；")+(o.anyOrder?"（顺序不限）":"");};
+  /* 渲染一道可作答变式题。opt:{subject,item,onDone(ok)}；答对 +金币+表扬；答错 鼓励+讲解卡+正确答案 */
+  G.variantWidget=function(el,v,opt){var o=G.vNorm(v),it=opt.item,done=false,sel=-1;
+    if(!o||!o.ok){el.innerHTML='<p class="bad">这道变式题缺答案，已跳过</p><button class="btn green" id="vx">下一题 →</button>';el.querySelector("#vx").onclick=function(){opt.onDone&&opt.onDone(null);};return;}
+    var h='<div class="vstem" style="font-size:20px">'+nl(o.stem)+'</div>';
+    if(o.type==="choice")h+=o.options.map(function(x,j){return '<button class="opt vopt" data-j="'+j+'">'+esc(x)+'</button>';}).join("");
+    else h+=o.labels.map(function(l,k){return '<label style="display:block;margin:8px 0;font-size:18px">'+esc(l)+' <input class="vin" data-k="'+k+'" autocomplete="off" style="font-size:20px;padding:6px 10px;border:3px solid var(--orange);border-radius:10px;width:min(260px,90%)"></label>';}).join("")+
+      '<small style="opacity:.7">根号可输入 √ 或 sqrt，分数写 a/b，坐标写 (x,y)'+(o.anyOrder?'；多个答案顺序不限':'')+'</small>';
+    h+='<div class="msg" id="vmsg"></div><button class="btn green" id="vsub">提交答案</button><div id="vres"></div>';el.innerHTML=h;
+    var $q=function(s){return el.querySelector(s);};
+    [].forEach.call(el.querySelectorAll(".vopt"),function(b){b.onclick=function(){if(done)return;sel=+b.dataset.j;[].forEach.call(el.querySelectorAll(".vopt"),function(x){x.classList.toggle("sel",x===b);});};});
+    $q("#vsub").onclick=function(){if(done)return;var ok,marks;
+      if(o.type==="choice"){if(sel<0){$q("#vmsg").innerHTML='<span class="bad">先选一个答案哦</span>';return;}ok=sel===o.ans;}
+      else{var ins=[].map.call(el.querySelectorAll(".vin"),function(x){return x.value;});if(ins.some(function(x){return !x.trim();})){$q("#vmsg").innerHTML='<span class="bad">还有空没填哦</span>';return;}
+        marks=G.checkFill(o,ins);ok=marks.every(Boolean);[].forEach.call(el.querySelectorAll(".vin"),function(x,k){x.style.borderColor=marks[k]?"#1E7B34":"#C01F1F";x.disabled=true;});}
+      done=true;$q("#vsub").remove();var st=it?G.setItemStatus(opt.subject,it.id,ok):null;
+      if(o.type==="choice"){var bs=el.querySelectorAll(".vopt");bs[o.ans].classList.add("right");if(!ok)bs[sel].classList.add("wrong");}
+      var r=$q("#vres"),card=it?{id:opt.subject+":"+it.id,"错因":it["为什么错"],"概念":it["概念"],"公式":it["公式"]}:null;
+      if(ok){G.correct();r.innerHTML='<p class="ok" style="font-size:20px">✅ 答对了！+'+G.COIN_PER_CORRECT+' 🪙 '+(st?G.statusTag(st):'')+'</p><div class="hint"><b>解析：</b>'+nl(o.explain)+'</div>';}
+      else{G.wrong();r.innerHTML='<p class="bad" style="font-size:20px">❌ 差一点！别灰心 '+(st?G.statusTag(st):'')+'</p><div class="hint"><b>正确答案：</b>'+esc(G.answerText(o))+'<br><b>解析：</b>'+nl(o.explain)+'</div>'+(card?G.whyCardHTML(card):'');
+        if(card)G.bindWhyCard(r,card);}
+      r.insertAdjacentHTML("beforeend",'<button class="btn green big" id="vx">下一题 →</button>');$q("#vx").onclick=function(){opt.onDone&&opt.onDone(ok);};G.refreshBars&&G.refreshBars();};};
+  /* 变式练习页：筛选（全部 / 未过关 / 未练）+ 状态标签 + 自动判分。“接上题”组保持原顺序（列表按错题→变式顺序，不打乱）。 */
+  G.variantPractice=function(el,subject,data){var items=(data&&data.items)||[],mode=sessionStorage.getItem("xx-var-mode-"+subject)||"todo",queue=[],qi=0;
+    function build(){queue=[];items.forEach(function(it){var st=G.itemStatus(subject,it);if(mode==="todo"&&st==="已过关")return;if(mode==="new"&&st!=="未练")return;
+      (it["变式"]||[]).forEach(function(v,k){queue.push({it:it,v:v,k:k});});});qi=0;}
+    function menu(){var c=G.statusCount(subject,data);
+      el.innerHTML=G.statusSummaryHTML(subject,data)+'<p>选择练习范围：</p>'+
+        [["todo","🎯 只练没过关的（未练+已练）"],["new","🆕 只练未练的"],["all","📚 全部"]].map(function(m){return '<button class="btn '+(mode===m[0]?"orange":"ghost")+' vmode" data-m="'+m[0]+'">'+m[1]+'</button>';}).join("")+
+        '<button class="btn green big" id="vstart">开始练习</button><h3>错题清单</h3><div class="vlist">'+items.map(function(it){return '<div class="vrow" data-id="'+esc(it.id)+'" style="padding:4px 0;border-bottom:1px dashed #ddd"><b>'+esc(it.id)+'</b> '+esc(String(it["知识点"]||"").split(/[；;]/)[0])+' '+G.statusTag(G.itemStatus(subject,it))+'</div>';}).join("")+'</div>';
+      [].forEach.call(el.querySelectorAll(".vmode"),function(b){b.onclick=function(){mode=b.dataset.m;sessionStorage.setItem("xx-var-mode-"+subject,mode);menu();};});
+      el.querySelector("#vstart").onclick=function(){build();draw();};}
+    function draw(){if(qi>=queue.length){el.innerHTML='<h2>🎉 '+(queue.length?'这一轮练完了！':'这个范围里没有题了！')+'</h2>'+G.statusSummaryHTML(subject,data)+'<button class="btn green" id="vback">回到清单</button>';el.querySelector("#vback").onclick=menu;return;}
+      var x=queue[qi];el.innerHTML='<p style="opacity:.7">'+(qi+1)+'/'+queue.length+' · 来自错题 '+esc(x.it.id)+' '+G.statusTag(G.itemStatus(subject,x.it))+' · '+esc(x.it["知识点"]||"")+'</p><h3>变式 '+(x.k+1)+'</h3><div id="vw"></div><button class="btn ghost" id="vq" style="margin-top:12px">返回清单</button>';
+      el.querySelector("#vq").onclick=menu;G.variantWidget(el.querySelector("#vw"),x.v,{subject:subject,item:x.it,onDone:function(){qi++;draw();window.scrollTo(0,0);}});}
+    menu();};
   window.XXGame=G;
 })();

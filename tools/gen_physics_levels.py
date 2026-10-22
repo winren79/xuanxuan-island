@@ -4,6 +4,12 @@
 import json, re, pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent; P = ROOT / "physics"
 VAR = json.loads(re.search(r"=\s*(\{.*\})\s*;?\s*$", (P / "variants.js").read_text(encoding="utf-8"), re.S).group(1))
+def _norm(v):  # 兼容统一作答格式(type/stem/options/answer) → 关卡内部 q/opts/ans
+    if "stem" in v and v.get("type") == "choice":
+        return dict(q=v["stem"], opts=[o[3:] if o[1:3] == ". " else o for o in v["options"]],
+                    ans="ABCDEFG".index(v["answer"]), explain=v.get("explain", ""))
+    return v
+VAR = {k: [_norm(x) for x in a] for k, a in VAR.items()}
 HEAD = '''<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>{title}</title><link rel="stylesheet" href="../common.css">
 <style>.hud{{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}}

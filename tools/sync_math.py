@@ -27,12 +27,34 @@ def parse(text):
         raw_status = head.split("｜")[-1].strip()
         sec = dict(re.findall(r"^#### (\S+)\n(.*?)(?=^#### |^---|\Z)", blk, flags=re.M | re.S))
         kp = plain(sec.get("薄弱知识点", "")) or meta.get("tag", "")
-        items.append({"id": meta["id"], "知识点": kp, "状态": STATUS.get(raw_status, "未练"),
+        items.append({"id": meta["id"], "知识点": kp, "状态": "未练",
                       "原状态": raw_status, "new": False,
                       "原题": plain(sec.get("原题", "")), "正确答案": plain(sec.get("正确答案", "")),
                       "为什么错": plain(sec.get("为什么错", "")), "概念": plain(sec.get("概念", "")),
                       "公式": plain(sec.get("公式", "")), "章节": meta.get("chapter", "")})
     return items
+
+def answerable(id_, q, a, e):
+    """把 variants_db 的 (题, 答案, 解析) 转成可自动判分的统一格式；缺答案规格返回 None。"""
+    from variants_ans import A
+    sp = A.get(id_)
+    if sp is None and re.fullmatch(r"[A-D]", a.strip()) and re.search(r"A[.．]", q):
+        parts = re.split(r"\s*(?=[A-D][.．]\s*)", q)
+        stem, opts = parts[0].strip(), [x.strip() for x in parts[1:]]
+        if len(opts) >= 2 and a.strip() in "ABCD"[:len(opts)]:
+            return {"type": "choice", "stem": stem, "options": opts, "answer": a.strip(), "explain": e, "key": a}
+    if sp is None:
+        return None
+    v = {"type": sp["type"], "stem": sp.get("stem") or q, "explain": e, "key": a}
+    if sp["type"] == "choice":
+        v["options"], v["answer"] = sp["options"], sp["answer"]
+        if not re.fullmatch(r"[A-D]", v["answer"]): return None
+    else:
+        v["answer"], v["labels"] = sp["answer"], sp["labels"]
+        if len(v["labels"]) != len(v["answer"]) or not all(v["answer"]): return None
+        if sp.get("anyOrder") or "anyOrderFrom" in sp:
+            v["anyOrder"] = True; v["anyOrderFrom"] = sp.get("anyOrderFrom", 0)
+    return v
 
 def main():
     ap = argparse.ArgumentParser()
@@ -53,13 +75,13 @@ def main():
     lack = []
     for it in items:
         it["new"] = it["id"] in new
-        it["变式"] = [{"q": q, "a": a, "explain": e} for q, a, e in V.get(it["id"], [])]
-        if not it["变式"]:
+        it["变式"] = [answerable(it["id"], q, a, e) for q, a, e in V.get(it["id"], [])]
+        if not it["变式"] or any(v is None for v in it["变式"]):
             lack.append(it["id"])
+            it["变式"] = [v for v in it["变式"] if v]
     if lack:
-        print(f"⚠️ 缺变式（请先在 tools/variants_db.py 补 1–2 道并两遍演算）: {lack}")
-        if a.strict:
-            sys.exit(1)
+        print(f"⚠️ 缺变式或缺可判分答案（请在 tools/variants_db.py 补变式、tools/variants_ans.py 补答案规格）: {lack}")
+        sys.exit(1)  # 变式必须可自动判分：缺答案规格一律失败（--strict 保留兼容）
     items.sort(key=lambda it: (not it["new"],))  # NEW 排最前，其余保持原顺序
     data = {"subject": "math", "updated": datetime.date.today().isoformat(), "items": items}
     js = ("// 由 tools/sync_math.py 自动生成，请勿手改；源：" + a.src + "\n"

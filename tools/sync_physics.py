@@ -32,7 +32,7 @@ def main():
                       "知识点": sec(blk, "薄弱知识点").split("（")[0], "状态": STATUS.get(m[6], "未练"),
                       "new": pid in new, "原题": sec(blk, "原题"), "正确答案": sec(blk, "正确答案"),
                       "为什么错": plain(sec(blk, "为什么错")), "概念": plain(sec(blk, "相关概念")),
-                      "变式": variants.get(pid, [])})
+                      "变式": [{k: v[k] for k in ("type", "stem", "options", "answer", "anyOrder", "explain") if k in v} for v in variants.get(pid, [])]})
     data = {"subject": "physics", "updated": datetime.date.today().isoformat(), "items": items}
     pathlib.Path(a.out).write_text("// 由 tools/sync_physics.py 从《轩轩物理错题本》生成，勿手改\nwindow.PHYSICS_DATA = "
                                    + json.dumps(data, ensure_ascii=False, indent=1) + ";\n", encoding="utf-8")
