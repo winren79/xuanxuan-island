@@ -12,3 +12,5 @@ window.PHYSICS_LEVELS.push({"id": "frost_boss", "title": "霜从哪里来", "fil
 window.PHYSICS_LEVELS.push({"id": "fridge_boss", "title": "冰箱制冷站", "file": "level_fridge_boss.html", "icon": "🧊", "boss": "P1021-4"});
 window.PHYSICS_LEVELS.push({"id": "whitegas_boss", "title": "白气真相", "file": "level_whitegas_boss.html", "icon": "☁️", "boss": "P1021-9"});
 window.PHYSICS_LEVELS.push({"id": "freezegraph_boss", "title": "凝固图像关", "file": "level_freezegraph_boss.html", "icon": "📉", "boss": "P1021-10"});
+window.PHYSICS_LEVELS.push({"id": "coldhot_boss", "title": "冷气热气同源关", "file": "level_coldhot_boss.html", "icon": "🍦", "boss": "P1022-5"});
+window.PHYSICS_LEVELS.push({"id": "steamegg_boss", "title": "蒸蛋汽化关", "file": "level_steamegg_boss.html", "icon": "🥚", "boss": "P1022-6"});

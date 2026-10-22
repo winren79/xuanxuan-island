@@ -30,7 +30,9 @@ window.PHYSICS_CHAPTERS = [
    "frost_boss",
    "fridge_boss",
    "whitegas_boss",
-   "freezegraph_boss"
+   "freezegraph_boss",
+   "coldhot_boss",
+   "steamegg_boss"
   ]
  },
  {

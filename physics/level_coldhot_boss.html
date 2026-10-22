@@ -1,0 +1,111 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>冷气热气同源关</title><link rel="stylesheet" href="../common.css">
+<style>.hud{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}
+.msg{min-height:28px;margin:8px 0;font-size:18px}.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}
+.tag{display:inline-block;color:#fff;border-radius:10px;padding:2px 10px;font-size:16px}.big{font-size:64px;text-align:center;margin:6px 0}</style></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回地图</a>
+<div class="hud"><span id="hearts"></span><span id="stage"></span><span id="coins"></span></div>
+<div class="grid"><div class="col1"><div class="card scene"><h2>🍦 冷气热气同源关</h2><div class="big">🍦🍜☁️</div><p>新错题 P1022-5：同是100 ℃，水蒸气多一步液化放热；“冷气”“热气”都是液化的小水滴。</p></div></div>
+<div class="card" id="box"></div></div></div>
+<script src="../common.js"></script><script src="data.js"></script><script src="levels.js"></script><script src="chapters.js"></script>
+<script>
+XXGame.quiz({subject:"physics", levelId:"coldhot_boss", items:[
+ {
+  "type": "mc",
+  "q": "被100 ℃的水蒸气烫伤往往比被同质量100 ℃的水烫伤更严重，主要原因是（　）",
+  "opts": [
+   "水蒸气的温度比水高",
+   "水蒸气液化时要放出大量的热",
+   "水蒸气汽化时要吸收大量的热",
+   "水蒸气比水更容易接触皮肤"
+  ],
+  "ans": 1,
+  "hint": "两者都是100 ℃，温度相同；水蒸气接触皮肤先液化成100 ℃的水，液化放出大量热，所以烫伤更严重。",
+  "v": {
+   "q": "夏天吃冰棒时冰棒周围冒“冷气”，冬天泡方便面时碗里冒“热气”。关于“冷气”和“热气”，下列说法正确的是（　）",
+   "opts": [
+    "“冷气”是水蒸气，“热气”是小水滴",
+    "两者都是水蒸气，成因不同",
+    "两者都是小水滴，都是水蒸气液化形成的，成因相同",
+    "“冷气”是凝华形成的，“热气”是汽化形成的"
+   ],
+   "ans": 2
+  },
+  "whySrc": "P1022-5",
+  "kind": "小怪①"
+ },
+ {
+  "type": "mc",
+  "q": "舞台上把干冰撒到空中形成白雾，下列说法正确的是（　）",
+  "opts": [
+   "干冰熔化吸热，白雾是水蒸气",
+   "干冰升华吸热，白雾是空气中水蒸气液化成的小水滴",
+   "干冰升华放热，白雾是二氧化碳气体",
+   "干冰汽化吸热，白雾是小冰晶"
+  ],
+  "ans": 1,
+  "hint": "干冰升华吸热，使周围空气中的水蒸气遇冷液化成小水滴形成白雾。",
+  "v": {
+   "q": "烧开水时壶嘴冒出的“白气”是（　）",
+   "opts": [
+    "水蒸气",
+    "小水滴",
+    "小冰晶",
+    "空气"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1021-9",
+  "kind": "小怪②"
+ },
+ {
+  "type": "mc",
+  "q": "夏天开冷气的汽车车窗上出现水珠，下列说法正确的是（　）",
+  "opts": [
+   "水珠在车窗内侧，是车内水蒸气液化",
+   "水珠在车窗外侧，是车外水蒸气液化",
+   "水珠在车窗外侧，是车外水蒸气凝华",
+   "水珠在车窗内侧，是车内水蒸气汽化"
+  ],
+  "ans": 1,
+  "hint": "车窗被冷气吹凉，车外热的水蒸气遇冷在外侧液化成水珠。",
+  "v": {
+   "q": "冬天早晨窗玻璃上的冰花出现在哪一侧，是怎么形成的？（　）",
+   "opts": [
+    "外侧，室外水蒸气凝固",
+    "内侧，室内水蒸气凝华",
+    "内侧，室内水蒸气凝化",
+    "外侧，室外水蒸气凝华"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1019-9",
+  "kind": "小怪③"
+ },
+ {
+  "type": "mc",
+  "q": "夏天吃冰棒时冰棒周围冒“冷气”，冬天泡方便面时碗里冒“热气”。关于“冷气”和“热气”，下列说法正确的是（　）",
+  "opts": [
+   "“冷气”是水蒸气，“热气”是小水滴",
+   "两者都是水蒸气，成因不同",
+   "两者都是小水滴，都是水蒸气液化形成的，成因相同",
+   "“冷气”是凝华形成的，“热气”是汽化形成的"
+  ],
+  "ans": 2,
+  "hint": "看得见的“白气”都是小水滴：冷气是空气中水蒸气遇冷液化，热气是热水汽化出的水蒸气遇冷空气液化，都是液化，成因相同。",
+  "v": {
+   "q": "被100 ℃的水蒸气烫伤往往比被同质量100 ℃的水烫伤更严重，主要原因是（　）",
+   "opts": [
+    "水蒸气的温度比水高",
+    "水蒸气液化时要放出大量的热",
+    "水蒸气汽化时要吸收大量的热",
+    "水蒸气比水更容易接触皮肤"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1022-5",
+  "kind": "BOSS",
+  "boss": true
+ }
+]});
+</script></body></html>
