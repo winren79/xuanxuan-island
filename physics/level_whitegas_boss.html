@@ -1,0 +1,111 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>白气真相</title><link rel="stylesheet" href="../common.css">
+<style>.hud{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}
+.msg{min-height:28px;margin:8px 0;font-size:18px}.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}
+.tag{display:inline-block;color:#fff;border-radius:10px;padding:2px 10px;font-size:16px}.big{font-size:64px;text-align:center;margin:6px 0}</style></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回地图</a>
+<div class="hud"><span id="hearts"></span><span id="stage"></span><span id="coins"></span></div>
+<div class="grid"><div class="col1"><div class="card scene"><h2>☁️ 白气真相</h2><div class="big">♨️☁️</div><p>新错题 P1021-9：看得见的“白气”都是小水滴（液态），水蒸气是看不见的。</p></div></div>
+<div class="card" id="box"></div></div></div>
+<script src="../common.js"></script><script src="data.js"></script><script src="levels.js"></script><script src="chapters.js"></script>
+<script>
+XXGame.quiz({subject:"physics", levelId:"whitegas_boss", items:[
+ {
+  "type": "mc",
+  "q": "烧开水时壶嘴冒出的“白气”是（　）",
+  "opts": [
+   "水蒸气",
+   "小水滴",
+   "小冰晶",
+   "空气"
+  ],
+  "ans": 1,
+  "hint": "水蒸气看不见，看得见的“白气”是水蒸气液化成的小水滴（液态）。",
+  "v": {
+   "q": "舞台上把干冰撒到空中形成白雾，下列说法正确的是（　）",
+   "opts": [
+    "干冰熔化吸热，白雾是水蒸气",
+    "干冰升华吸热，白雾是空气中水蒸气液化成的小水滴",
+    "干冰升华放热，白雾是二氧化碳气体",
+    "干冰汽化吸热，白雾是小冰晶"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1021-9",
+  "kind": "小怪①"
+ },
+ {
+  "type": "mc",
+  "q": "夏天开冷气的汽车车窗上出现水珠，下列说法正确的是（　）",
+  "opts": [
+   "水珠在车窗内侧，是车内水蒸气液化",
+   "水珠在车窗外侧，是车外水蒸气液化",
+   "水珠在车窗外侧，是车外水蒸气凝华",
+   "水珠在车窗内侧，是车内水蒸气汽化"
+  ],
+  "ans": 1,
+  "hint": "车窗被冷气吹凉，车外热的水蒸气遇冷在外侧液化成水珠。",
+  "v": {
+   "q": "冬天早晨窗玻璃上的冰花出现在哪一侧，是怎么形成的？（　）",
+   "opts": [
+    "外侧，室外水蒸气凝固",
+    "内侧，室内水蒸气凝华",
+    "内侧，室内水蒸气凝化",
+    "外侧，室外水蒸气凝华"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1019-9",
+  "kind": "小怪②"
+ },
+ {
+  "type": "mc",
+  "q": "使气体液化的两种方法是（　）",
+  "opts": [
+   "降低温度和压缩体积",
+   "升高温度和压缩体积",
+   "降低温度和增大体积",
+   "加热和搅拌"
+  ],
+  "ans": 0,
+  "hint": "液化石油气就是常温下压缩体积使气体液化。",
+  "v": {
+   "q": "冬天草叶上的霜是怎么形成的？（　）",
+   "opts": [
+    "空气凝华",
+    "水蒸气凝华",
+    "水凝固",
+    "水蒸气液化"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1021-3",
+  "kind": "小怪③"
+ },
+ {
+  "type": "mc",
+  "q": "舞台上把干冰撒到空中形成白雾，下列说法正确的是（　）",
+  "opts": [
+   "干冰熔化吸热，白雾是水蒸气",
+   "干冰升华吸热，白雾是空气中水蒸气液化成的小水滴",
+   "干冰升华放热，白雾是二氧化碳气体",
+   "干冰汽化吸热，白雾是小冰晶"
+  ],
+  "ans": 1,
+  "hint": "干冰升华吸热，使周围空气中的水蒸气遇冷液化成小水滴形成白雾。",
+  "v": {
+   "q": "烧开水时壶嘴冒出的“白气”是（　）",
+   "opts": [
+    "水蒸气",
+    "小水滴",
+    "小冰晶",
+    "空气"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1021-9",
+  "kind": "BOSS",
+  "boss": true
+ }
+]});
+</script></body></html>

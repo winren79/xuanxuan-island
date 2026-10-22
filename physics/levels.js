@@ -8,3 +8,7 @@ window.PHYSICS_LEVELS.push({"id": "temp_detective", "title": "温度计小侦探
 window.PHYSICS_LEVELS.push({"id": "melt_freeze", "title": "熔化凝固冰火关", "file": "level_melt_freeze.html", "icon": "🔥", "boss": "P1018-14"});
 window.PHYSICS_LEVELS.push({"id": "vapor_liquid", "title": "汽化液化工坊", "file": "level_vapor_liquid.html", "icon": "💨", "boss": "P1019-5"});
 window.PHYSICS_LEVELS.push({"id": "sublimation", "title": "升华凝华冰雪关", "file": "level_sublimation.html", "icon": "❄️", "boss": "P1019-9"});
+window.PHYSICS_LEVELS.push({"id": "frost_boss", "title": "霜从哪里来", "file": "level_frost_boss.html", "icon": "🌨️", "boss": "P1021-3"});
+window.PHYSICS_LEVELS.push({"id": "fridge_boss", "title": "冰箱制冷站", "file": "level_fridge_boss.html", "icon": "🧊", "boss": "P1021-4"});
+window.PHYSICS_LEVELS.push({"id": "whitegas_boss", "title": "白气真相", "file": "level_whitegas_boss.html", "icon": "☁️", "boss": "P1021-9"});
+window.PHYSICS_LEVELS.push({"id": "freezegraph_boss", "title": "凝固图像关", "file": "level_freezegraph_boss.html", "icon": "📉", "boss": "P1021-10"});

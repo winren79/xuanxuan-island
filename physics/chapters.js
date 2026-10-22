@@ -26,7 +26,11 @@ window.PHYSICS_CHAPTERS = [
    "temp_detective",
    "melt_freeze",
    "vapor_liquid",
-   "sublimation"
+   "sublimation",
+   "frost_boss",
+   "fridge_boss",
+   "whitegas_boss",
+   "freezegraph_boss"
   ]
  },
  {

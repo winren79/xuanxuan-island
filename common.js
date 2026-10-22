@@ -20,7 +20,8 @@
   function load(){
     var p; try{p=JSON.parse(localStorage.getItem(KEY))||{};}catch(e){p={};}
     if(p.version!==2&&p.version!==3){ p={version:3,coins:+p.coins||0,subjects:{}}; } // v1 样例存档：保留金币
-    p.version=3; p.subjects=p.subjects||{}; p.coins=+p.coins||0;
+    p.version=3; p.subjects=p.subjects||{};
+    if(p.vstatusVer!==2){p.vstatus={};p.vstatusVer=2;try{localStorage.setItem(KEY,JSON.stringify(p));}catch(e){}} // 一次性把旧的变式状态清零为未练 p.coins=+p.coins||0;
     var s=p.settings=p.settings||{};
     if(s.music===undefined)s.music=true;
     if(!s.thresholds||!s.thresholds.length)s.thresholds=[10,25,45,70,100];
@@ -275,14 +276,14 @@
     (levels||[]).forEach(function(l){if(l.boss&&rec[l.id]&&rec[l.id].bestStars>=2)passed[l.boss]=l;});
     var items=(data&&data.items)||[];
     items.forEach(function(it){var st=G.itemStatus(subject,it);c[st]=(c[st]||0)+1;
-      if(it["new"]){var lv=(levels||[]).filter(function(l){return l.boss===it.id;})[0];news.push({it:it,level:lv,status:st});}});
+      if(it["new"]){var lv=(levels||[]).filter(function(l){return l.boss===it.id;})[0];if(!lv&&subject==="math"&&window.MATH_AUTO){var al=(window.MATH_AUTO.levels||[]).filter(function(l){return (l.items||[]).indexOf(it.id)>=0;})[0];if(al)lv={id:al.id,title:al.title,file:al.file,auto:true};}news.push({it:it,level:lv,status:st});}});
     return {count:c,total:items.length,news:news,updated:data&&data.updated};};
   G.wrongHTML=function(subject,data,levels,base){
     var s=G.wrongStats(subject,data,levels);if(!s.total)return '<p>暂无错题数据</p>';
     var h='<div class="stat3"><span style="background:#C01F1F">未练 '+s.count["未练"]+'</span><span style="background:#D9A400">已练 '+s.count["已练"]+'</span><span style="background:#1E7B34">已过关 '+s.count["已过关"]+'</span></div>';
     if(s.news.length){h+='<div class="newlist"><b><span class="new">NEW</span> 本次Boss关</b>';
       s.news.forEach(function(n){h+='<div class="newitem">'+(n.level?'<a href="'+(base||"")+esc(n.level.file)+'">':'')+'<b>'+esc(n.it.id)+'</b> '+esc(String(n.it["知识点"]).split(/[；;]/)[0])+
-        (n.level?' 👉 Boss：'+esc(n.level.title)+'</a>':' <small>（关卡制作中）</small>')+' <small>['+n.status+']</small></div>';});h+='</div>';}
+        (n.level?' 👉 '+(n.level.auto?'小关':'Boss')+'：'+esc(n.level.title)+'</a>':' <small>（关卡制作中）</small>')+' <small>['+n.status+']</small></div>';});h+='</div>';}
     return h+'<small style="color:#888">错题本更新：'+esc(s.updated||"—")+'</small>';};
 
   /* ---------- 家长周报 ---------- */
@@ -375,7 +376,8 @@
     else{var a=v.answer;if(typeof a==="string")a=[[a]];else if(a&&a.length&&typeof a[0]==="string")a=v.labels&&v.labels.length===a.length?a.map(function(x){return [x];}):[a];
       o.blanks=a||[];o.labels=v.labels||o.blanks.map(function(){return "答案";});o.anyOrder=!!v.anyOrder;o.from=v.anyOrderFrom||0;o.ok=o.blanks.length>0;}
     return o;};
-  G.itemStatus=function(subject,it){var st=((load().vstatus||{})[subject]||{})[it.id]||"未练",seed=it["状态"]||"未练";return RANK[seed]>RANK[st]?seed:st;};
+  /* 游戏内状态只看轩轩在闯关岛的作答，错题本/数据里的「状态」不作为起点（家长 10-22 要求全部从未练开始） */
+  G.itemStatus=function(subject,it){return ((load().vstatus||{})[subject]||{})[it.id]||"未练";};
   G.setItemStatus=function(subject,id,ok){var p=load();p.vstatus=p.vstatus||{};var m=p.vstatus[subject]=p.vstatus[subject]||{};
     var cur=m[id]||"未练",nw=ok?"已过关":"已练";if(RANK[nw]>RANK[cur])m[id]=nw;save(p);return m[id];};
   G.statusTag=function(st){var c={"未练":"#C01F1F","已练":"#D9A400","已过关":"#1E7B34"}[String(st).split(" ")[0]]||"#888";
