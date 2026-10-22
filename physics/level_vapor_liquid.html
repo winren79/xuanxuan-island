@@ -1,0 +1,135 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>汽化液化工坊</title><link rel="stylesheet" href="../common.css">
+<style>.hud{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}
+.msg{min-height:28px;margin:8px 0;font-size:18px}.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}
+.tag{display:inline-block;color:#fff;border-radius:10px;padding:2px 10px;font-size:16px}.big{font-size:64px;text-align:center;margin:6px 0}</style></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回地图</a>
+<div class="hud"><span id="hearts"></span><span id="stage"></span><span id="coins"></span></div>
+<div class="grid"><div class="col1"><div class="card scene"><h2>💨 汽化液化工坊</h2><div class="big">♨️💧</div><p>汽化液化易错点：写“汽化”不写“气化”；蒸发是汽化的一种；沸腾要达到沸点并继续吸热；冰箱里汽化吸热、冷凝器里液化放热。</p></div></div>
+<div class="card" id="box"></div></div></div>
+<script src="../common.js"></script><script src="data.js"></script><script src="levels.js"></script><script src="chapters.js"></script>
+<script>
+XXGame.quiz({subject:"physics", levelId:"vapor_liquid", items:[
+ {
+  "type": "mc",
+  "q": "液态物质变成气态的物态变化叫（　）",
+  "opts": [
+   "气化",
+   "汽化",
+   "液化",
+   "升华"
+  ],
+  "ans": 1,
+  "hint": "物理名词“汽化”用三点水的“汽”。",
+  "v": {
+   "q": "夏天在地上洒水感觉凉快，是因为水（　）",
+   "opts": [
+    "汽化吸热",
+    "气化吸热",
+    "液化放热",
+    "汽化放热"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1012-1",
+  "kind": "小怪①"
+ },
+ {
+  "type": "mc",
+  "q": "晾在阳光下的湿衣服变干，发生的物态变化是（　）",
+  "opts": [
+   "蒸发，它属于汽化",
+   "液化",
+   "升华",
+   "熔化"
+  ],
+  "ans": 0,
+  "hint": "湿衣服里的水变成水蒸气是蒸发，蒸发是汽化的一种方式。",
+  "v": {
+   "q": "关于蒸发和沸腾，下列说法正确的是（　）",
+   "opts": [
+    "蒸发不属于汽化",
+    "蒸发和沸腾都是汽化的方式",
+    "沸腾不需要吸热",
+    "蒸发只在 100 ℃ 时发生"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1012-2",
+  "kind": "小怪②"
+ },
+ {
+  "type": "mc",
+  "q": "组装“探究水沸腾”的装置，正确的顺序是（　）",
+  "opts": [
+   "先挂温度计，再放酒精灯",
+   "自下而上：放酒精灯→固定下方铁夹放陶土网和烧杯→固定上方铁夹→挂温度计",
+   "自上而下：先固定温度计铁夹",
+   "先倒水，再放酒精灯，最后点火"
+  ],
+  "ans": 1,
+  "hint": "按自下而上组装，要先固定上方铁夹，温度计才能挂上去。",
+  "v": {
+   "q": "水温依次为 92、95、97、98、98、98 ℃。下列说法正确的是（　）",
+   "opts": [
+    "水沸腾后继续吸热，温度保持 98 ℃",
+    "水沸腾后温度继续升高",
+    "水的沸点是 92 ℃",
+    "水沸腾后不需要吸热"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1012-4",
+  "kind": "小怪③"
+ },
+ {
+  "type": "mc",
+  "q": "电冰箱工作时，制冷剂在冷冻室和冷凝器中发生的物态变化分别是（　）",
+  "opts": [
+   "汽化吸热；液化放热",
+   "液化吸热；汽化放热",
+   "汽化放热；液化吸热",
+   "升华吸热；凝华放热"
+  ],
+  "ans": 0,
+  "hint": "冷冻室里液态制冷剂汽化吸热制冷；在冷凝器中液化放热，把热量带到冰箱外。",
+  "v": {
+   "q": "冰箱背后的冷凝器管道弯成蛇形，目的是（　）",
+   "opts": [
+    "增大散热面积，让制冷剂更快放热液化",
+    "让制冷剂流得更快",
+    "让热空气排出冰箱",
+    "减小冰箱的重量"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1021-4",
+  "kind": "小怪④"
+ },
+ {
+  "type": "mc",
+  "q": "烧杯中的水持续沸腾（100 ℃），里面插着两支试管，分别装水和酒精（酒精沸点约 78 ℃）。能沸腾的是（　）",
+  "opts": [
+   "只有试管中的酒精",
+   "只有试管中的水",
+   "两者都能",
+   "两者都不能"
+  ],
+  "ans": 0,
+  "hint": "酒精沸点低于 100 ℃，能持续吸热沸腾；试管中的水到 100 ℃ 后与外面没温差，不能继续吸热。",
+  "v": {
+   "q": "用沸水给试管里的水隔水加热，试管里的水不能沸腾，原因是（　）",
+   "opts": [
+    "试管里的水太少",
+    "达到沸点后不能继续吸热",
+    "试管里的水沸点更高",
+    "试管挡住了火"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1019-5",
+  "kind": "BOSS",
+  "boss": true
+ }
+]});
+</script></body></html>

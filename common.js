@@ -112,8 +112,12 @@
     var h='<h2>'+(ch.icon||"🏝️")+' '+esc(ch.title)+(G.chapterCleared(subject,ch)?' <span class="ok">🚩 已通关</span>':'')+'</h2>';
     if(ch.locked)return h+'<p>🔒 还没学到这一章，学到了就会开放！</p>';
     if(!ch.levels.length)return h+'<p>🚧 关卡建设中，敬请期待</p>';
+    var prevSeq=null;
     ch.levels.forEach(function(id,i){var l=lv.filter(function(x){return x.id===id;})[0];if(!l)return;var b=G.levelStars(subject,id);
-      h+='<a class="btn '+(subject==="physics"?"green":"red")+'" id="lv-'+esc(id)+'" href="'+(base||"")+esc(l.file)+'">'+(l.icon||"")+' 第'+(i+1)+'关 '+esc(l.title)+'<br><span style="font-size:18px">'+"⭐".repeat(b)+"☆".repeat(3-b)+'</span></a>';});
+      var lock=l.seq&&prevSeq&&G.levelStars(subject,prevSeq)<1;if(l.seq)prevSeq=id;
+      var t=(l.icon||"")+' 第'+(i+1)+'关 '+(l.boss?'👑 Boss · ':'')+esc(l.title)+'<br><span style="font-size:18px">'+(lock?'🔒 先通过上一关':"⭐".repeat(b)+"☆".repeat(3-b))+'</span>';
+      h+=lock?'<a class="btn ghost lockedlv" id="lv-'+esc(id)+'" style="opacity:.55;pointer-events:none">'+t+'</a>'
+        :'<a class="btn '+(subject==="physics"?"green":"red")+'" id="lv-'+esc(id)+'" href="'+(base||"")+esc(l.file)+'">'+t+'</a>';});
     return h+'<small>本章所有关卡都拿到 ≥1⭐ 就通关，小船开往下一个岛并开宝箱！</small>';};
   /** 岛页（地图页）一键渲染：subject/index.html 只需 <div id="app"></div> + XXGame.mapPage("physics") */
   G.mapPage=function(subject,opt){opt=opt||{};var app=document.getElementById(opt.el||"app"),U=upper(subject);
@@ -324,6 +328,31 @@
         '<p style="text-align:center">一次答对 '+first+'/'+items.length+'（正确率 '+Math.round(rate*100)+'%）<br>过关奖励 +'+res.bonus+' 🪙，金币总数 '+res.coins+'</p>'+
         '<a class="btn green" id="tomap" href="index.html">返回地图</a><a class="btn ghost" href="../index.html">回首页</a>';}
     render();};
+
+  /* 自动错题小关：每题 = 错题本原题(自评) + 变式(自评)。原题做错 → 扣❤️ + 鼓励 + 讲解卡；变式做对可复活。 */
+  G.selfQuiz=function(cfg){var ids=cfg.ids,items=ids.map(function(id){return G.dataItem(cfg.subject,id);}).filter(Boolean),
+    idx=0,step=0,MAXH=3,hearts=MAXH,first=0,missed=false,$=function(id){return document.getElementById(id);};
+    function hud(){$("hearts").textContent="❤️".repeat(hearts)+"🤍".repeat(MAXH-hearts);$("stage").textContent=Math.min(idx+1,items.length)+"/"+items.length;$("coins").textContent="🪙 "+G.totals().coins;}
+    function card(it){return {id:cfg.subject+":"+it.id,"错因":it["为什么错"],"概念":it["概念"],"公式":it["公式"]};}
+    function render(msg){var it=items[idx],v=(it["变式"]||[])[0];hud();
+      var orig=step===0,h='<span class="tag" style="background:'+(orig?"#D96B00":"#1E7B34")+'">'+(orig?"原题 · 错题本 "+esc(it.id):"变式题 · 举一反三")+'</span>'+
+        '<p style="opacity:.7">'+esc(it["知识点"]||"")+'</p><div class="qtext" style="font-size:20px">'+nl(orig?it["原题"]:v.q)+'</div>'+
+        (msg?'<div class="msg">'+msg+'</div>':'')+(!orig&&missed?G.whyCardHTML(card(it)):'')+
+        '<p style="opacity:.75">先在草稿纸上做完，再看答案自己判对错。</p><button class="btn orange" id="show">想好了，看答案</button><div id="res"></div>';
+      $("box").innerHTML=h;if(!orig&&missed)G.bindWhyCard($("box"),card(it));
+      $("show").onclick=function(){this.remove();$("res").innerHTML='<div class="hint"><b>答案：</b>'+nl(orig?it["正确答案"]:v.a)+(orig?'':'<br><b>解析：</b>'+nl(v.explain||""))+'</div>'+
+        '<button class="btn green" id="yes">✅ 我做对了</button><button class="btn red" id="no">❌ 我做错了</button>';$("yes").onclick=function(){mark(true);};$("no").onclick=function(){mark(false);};};}
+    function nextStep(){var it=items[idx];if(step===0&&(it["变式"]||[]).length){step=1;render();}else{step=0;missed=false;idx++;idx<items.length?render():end();}}
+    function mark(ok){var it=items[idx];
+      if(step===0){if(ok){first++;G.correct();missed=false;nextStep();}else{missed=true;hearts--;G.wrong();if(hearts<=0&&!(it["变式"]||[]).length)return gameOver();step=1;render('<span class="bad">没关系！先看讲解卡，再做变式题'+(hearts<=0?'——答对就复活！':'，答对可复活 1 ❤️')+'</span>');}return;}
+      if(ok){G.correct();if(missed)hearts=Math.min(MAXH,hearts+1);nextStep();}else{G.wrong();if(hearts<=0)return gameOver();if(missed){hearts--;if(hearts<=0)return gameOver();}nextStep();}}
+    function gameOver(){hud();$("box").innerHTML='<h2>💔 挑战失败</h2><p>❤️ 用完了，别灰心，再来一次！</p><button class="btn red" onclick="location.reload()">重新挑战</button><a class="btn ghost" href="index.html">返回地图</a>';}
+    function end(){var rate=items.length?first/items.length:1,stars=rate>=.85?3:rate>=.55?2:1,res=G.finish(cfg.subject,cfg.levelId,stars,rate);hud();
+      $("box").innerHTML='<h1 id="result">🎉 通关！</h1><div style="text-align:center;font-size:48px">'+"⭐".repeat(stars)+"☆".repeat(3-stars)+'</div>'+
+        '<p style="text-align:center">原题一次做对 '+first+'/'+items.length+'（正确率 '+Math.round(rate*100)+'%）<br>过关奖励 +'+res.bonus+' 🪙，金币总数 '+res.coins+'</p>'+
+        '<a class="btn green" id="tomap" href="index.html">返回地图</a><a class="btn ghost" href="../index.html">回首页</a>';}
+    G._quiz={item:function(){return items[idx];},index:function(){return idx;},hearts:function(){return hearts;},step:function(){return step;}};
+    if(!items.length){$("box").innerHTML="<p>本关暂无题目</p>";return;}render();};
 
   document.addEventListener("DOMContentLoaded",musicButton);
   if(document.readyState!=="loading")musicButton();

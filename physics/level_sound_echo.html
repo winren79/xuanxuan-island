@@ -1,0 +1,135 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>回声与噪声探险</title><link rel="stylesheet" href="../common.css">
+<style>.hud{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}
+.msg{min-height:28px;margin:8px 0;font-size:18px}.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}
+.tag{display:inline-block;color:#fff;border-radius:10px;padding:2px 10px;font-size:16px}.big{font-size:64px;text-align:center;margin:6px 0}</style></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回地图</a>
+<div class="hud"><span id="hearts"></span><span id="stage"></span><span id="coins"></span></div>
+<div class="grid"><div class="col1"><div class="card scene"><h2>📡 回声与噪声探险</h2><div class="big">📡🌊🔇</div><p>声的传播易错点：真空不能传声；声速与响度无关；回声测距要除以 2；减弱噪声分声源处、传播中、人耳处。</p></div></div>
+<div class="card" id="box"></div></div></div>
+<script src="../common.js"></script><script src="data.js"></script><script src="levels.js"></script><script src="chapters.js"></script>
+<script>
+XXGame.quiz({subject:"physics", levelId:"sound_echo", items:[
+ {
+  "type": "mc",
+  "q": "在空旷的大房间里说话，比在室外说话听起来更响亮，主要原因是（　）",
+  "opts": [
+   "房间里声速变快了",
+   "说话时声带振动频率变大",
+   "墙壁反射的回声与原声叠加",
+   "房间里空气更多"
+  ],
+  "ans": 2,
+  "hint": "声速只由介质和温度决定；室内回声与原声叠加，响度变大。",
+  "v": {
+   "q": "关于声速，下列说法正确的是（　）",
+   "opts": [
+    "声音越响，传播越快",
+    "音调越高，传播越快",
+    "15 ℃ 空气中声速约 340 m/s，与响度无关",
+    "在隧道里声音传播更快"
+   ],
+   "ans": 2
+  },
+  "whySrc": "P0927-5",
+  "kind": "小怪①"
+ },
+ {
+  "type": "mc",
+  "q": "把声音的频率调到 30000 Hz，下列说法正确的是（　）",
+  "opts": [
+   "人能听到，也能用它测地月距离",
+   "人听不到，但能用它测地月距离",
+   "人听不到，也不能用它测地月距离",
+   "人能听到，但不能测地月距离"
+  ],
+  "ans": 2,
+  "hint": "超过 20000 Hz 是超声波，人听不到；地月之间是真空，声音不能传播。",
+  "v": {
+   "q": "宇航员在月球表面不能直接对话，原因是（　）",
+   "opts": [
+    "月球上太冷",
+    "真空不能传声",
+    "声音传得太快",
+    "宇航员声音太小"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1004-11",
+  "kind": "小怪②"
+ },
+ {
+  "type": "mc",
+  "q": "关于减弱噪声，下列说法正确的是（　）",
+  "opts": [
+   "城市道路旁的隔音墙是在声源处减弱噪声",
+   "在教室里戴耳塞是在传播过程中减弱噪声",
+   "给汽车排气管装消声器是在声源处减弱噪声",
+   "关上窗户是在人耳处减弱噪声"
+  ],
+  "ans": 2,
+  "hint": "消声器→声源处；隔音墙、关窗→传播过程中；耳塞→人耳处。",
+  "v": {
+   "q": "医院附近“禁止鸣笛”和工人戴防噪声耳罩，分别是在（　）减弱噪声",
+   "opts": [
+    "传播过程中；声源处",
+    "声源处；人耳处",
+    "人耳处；声源处",
+    "声源处；传播过程中"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1004-7",
+  "kind": "小怪③"
+ },
+ {
+  "type": "mc",
+  "q": "纵波速度约 6 km/s，横波约 3 km/s。震源距监测站 72 km，距居民 108 km。监测站收到纵波后立即预警（电磁波传播时间忽略），居民收到预警后到横波到达前的应急时间是（　）",
+  "opts": [
+   "6 s",
+   "12 s",
+   "24 s",
+   "36 s"
+  ],
+  "ans": 2,
+  "hint": "监测站收到纵波：72÷6＝12 s；横波到居民：108÷3＝36 s；应急时间 36－12＝24 s。破坏性强的是横波。",
+  "v": {
+   "q": "地震波的频率一般低于 20 Hz，它属于（　）",
+   "opts": [
+    "超声波",
+    "次声波",
+    "可听声",
+    "电磁波"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P0927-16",
+  "kind": "小怪④"
+ },
+ {
+  "type": "mc",
+  "q": "声呐向海底垂直发出声波，6 s 后收到回波，海水中声速 1500 m/s，海水深度是（　）",
+  "opts": [
+   "9000 m",
+   "4500 m",
+   "250 m",
+   "1500 m"
+  ],
+  "ans": 1,
+  "hint": "声音走了一个来回：h＝vt/2＝1500 m/s×6 s÷2＝4500 m。",
+  "v": {
+   "q": "对着山崖大喊，1.5 s 后听到回声（15 ℃ 空气中声速 340 m/s），人离山崖（　）",
+   "opts": [
+    "510 m",
+    "255 m",
+    "227 m",
+    "340 m"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1004-15",
+  "kind": "BOSS",
+  "boss": true
+ }
+]});
+</script></body></html>

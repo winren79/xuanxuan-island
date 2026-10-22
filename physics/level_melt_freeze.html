@@ -1,0 +1,135 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>熔化凝固冰火关</title><link rel="stylesheet" href="../common.css">
+<style>.hud{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}
+.msg{min-height:28px;margin:8px 0;font-size:18px}.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}
+.tag{display:inline-block;color:#fff;border-radius:10px;padding:2px 10px;font-size:16px}.big{font-size:64px;text-align:center;margin:6px 0}</style></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回地图</a>
+<div class="hud"><span id="hearts"></span><span id="stage"></span><span id="coins"></span></div>
+<div class="grid"><div class="col1"><div class="card scene"><h2>🔥 熔化凝固冰火关</h2><div class="big">🧊🔥</div><p>熔化凝固易错点：晶体熔化/凝固时温度不变；熔化要达到熔点并继续吸热；熔化吸热、凝固放热。</p></div></div>
+<div class="card" id="box"></div></div></div>
+<script src="../common.js"></script><script src="data.js"></script><script src="levels.js"></script><script src="chapters.js"></script>
+<script>
+XXGame.quiz({subject:"physics", levelId:"melt_freeze", items:[
+ {
+  "type": "mc",
+  "q": "下列各组物质中，都是晶体的一组是（　）",
+  "opts": [
+   "萘、食盐",
+   "松香、海波",
+   "玻璃、铁",
+   "石蜡、冰"
+  ],
+  "ans": 0,
+  "hint": "晶体：冰、海波、金属、萘、食盐；非晶体：石蜡、松香、玻璃、沥青。",
+  "v": {
+   "q": "下列各组物质中，都没有固定熔点的一组是（　）",
+   "opts": [
+    "冰、玻璃",
+    "沥青、松香",
+    "海波、石蜡",
+    "铜、萘"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1018-4",
+  "kind": "小怪①"
+ },
+ {
+  "type": "mc",
+  "q": "“55°杯”夹层里装的晶体物质，让热水降温和让冷水升温分别利用了（　）",
+  "opts": [
+   "凝固吸热；熔化放热",
+   "熔化吸热；凝固放热",
+   "汽化吸热；液化放热",
+   "熔化放热；凝固吸热"
+  ],
+  "ans": 1,
+  "hint": "降温：物质熔化从热水吸热；升温：物质凝固向冷水放热。",
+  "v": {
+   "q": "冰袋能给饮料降温，主要原因是（　）",
+   "opts": [
+    "冰熔化吸热",
+    "冰凝固吸热",
+    "冰熔化放热",
+    "冰凝固放热"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1018-6",
+  "kind": "小怪②"
+ },
+ {
+  "type": "mc",
+  "q": "大烧杯和插在其中的试管里都是碎冰，加热烧杯，烧杯中的冰大部分熔化时，试管中的冰（　）",
+  "opts": [
+   "也大部分熔化",
+   "不会熔化",
+   "全部熔化",
+   "比烧杯中的冰熔化更快"
+  ],
+  "ans": 1,
+  "hint": "内外都是 0 ℃，没有温度差，试管里的冰不能继续吸热，不熔化。",
+  "v": {
+   "q": "晶体熔化需要满足的条件是（　）",
+   "opts": [
+    "只要达到熔点",
+    "达到熔点并继续吸热",
+    "只要吸热",
+    "温度高于 100 ℃"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1018-12",
+  "kind": "小怪③"
+ },
+ {
+  "type": "mc",
+  "q": "某防冻液凝固图像中，温度在 −30 ℃ 保持不变一段时间。下列说法正确的是（　）",
+  "opts": [
+   "凝固过程中温度不断下降",
+   "凝固点是 −30 ℃，最低气温 −20 ℃ 的地区可以使用",
+   "凝固点是 −30 ℃，最低气温 −40 ℃ 的地区可以使用",
+   "凝固过程中温度上升"
+  ],
+  "ans": 1,
+  "hint": "凝固过程对应水平段，温度不变；凝固点 −30 ℃ 低于 −20 ℃，在该地区不会凝固。",
+  "v": {
+   "q": "晶体凝固过程中（　）",
+   "opts": [
+    "放热，温度不变",
+    "放热，温度下降",
+    "吸热，温度不变",
+    "吸热，温度下降"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1021-10",
+  "kind": "小怪④"
+ },
+ {
+  "type": "mc",
+  "q": "海波熔化过程中，不断吸收热量，温度（　）",
+  "opts": [
+   "升高",
+   "降低",
+   "不变",
+   "先升高后降低"
+  ],
+  "ans": 2,
+  "hint": "晶体熔化时吸热、温度不变（海波保持 48 ℃）。",
+  "v": {
+   "q": "下列过程中，物质吸热但温度保持不变的是（　）",
+   "opts": [
+    "石蜡熔化",
+    "冰在熔化",
+    "水在升温到 60 ℃",
+    "铁块被加热升温"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1018-14",
+  "kind": "BOSS",
+  "boss": true
+ }
+]});
+</script></body></html>

@@ -1,0 +1,135 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>声音特性音乐会</title><link rel="stylesheet" href="../common.css">
+<style>.hud{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}
+.msg{min-height:28px;margin:8px 0;font-size:18px}.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}
+.tag{display:inline-block;color:#fff;border-radius:10px;padding:2px 10px;font-size:16px}.big{font-size:64px;text-align:center;margin:6px 0}</style></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回地图</a>
+<div class="hud"><span id="hearts"></span><span id="stage"></span><span id="coins"></span></div>
+<div class="grid"><div class="col1"><div class="card scene"><h2>🎵 声音特性音乐会</h2><div class="big">🥁🎻🎶</div><p>声现象易错点：用力大小→响度；长短粗细松紧→音调；认出是谁→音色。吹的是空气柱，敲的是瓶和水。</p></div></div>
+<div class="card" id="box"></div></div></div>
+<script src="../common.js"></script><script src="data.js"></script><script src="levels.js"></script><script src="chapters.js"></script>
+<script>
+XXGame.quiz({subject:"physics", levelId:"sound_traits", items:[
+ {
+  "type": "mc",
+  "q": "吹响竹笛时，真正振动发声的是（　）",
+  "opts": [
+   "笛子的竹管",
+   "笛管内的空气柱",
+   "吹笛人的手指",
+   "笛子上的笛膜贴纸"
+  ],
+  "ans": 1,
+  "hint": "管乐器（笛、箫、哨）靠管内空气柱振动发声。",
+  "v": {
+   "q": "下列说法正确的是（　）",
+   "opts": [
+    "用力擂鼓声音传得远，是因为音调高",
+    "隔着墙听声音认出是谁，靠的是响度",
+    "鱼被岸上的脚步声吓跑，说明液体能传声",
+    "吹口哨发声，靠的是嘴唇外的空气不动"
+   ],
+   "ans": 2
+  },
+  "whySrc": "P0927-4",
+  "kind": "小怪①"
+ },
+ {
+  "type": "mc",
+  "q": "下列实验中，属于探究“响度与振幅的关系”的是（　）",
+  "opts": [
+   "用大小不同的力敲同一个鼓，观察鼓面上纸屑跳起的高度",
+   "改变钢尺伸出桌边的长度，用相同的力拨动",
+   "把正在响的手机放进真空罩并抽气",
+   "音箱前放点燃的蜡烛，烛焰晃动"
+  ],
+  "ans": 0,
+  "hint": "只改变振幅（用力大小），其他不变，才是探究响度与振幅。B 研究音调，C 研究真空传声，D 说明声能传递能量。",
+  "v": {
+   "q": "用大小不同的力拨动同一根橡皮筋，比较声音的大小，是在探究（　）",
+   "opts": [
+    "响度与振幅的关系",
+    "音调与频率的关系",
+    "音色与材料的关系",
+    "声速与介质的关系"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1004-6",
+  "kind": "小怪②"
+ },
+ {
+  "type": "mc",
+  "q": "用同种材料、同样粗细、松紧相同但长度不同的两根琴弦做实验，是在研究音调与（　）的关系",
+  "opts": [
+   "长度",
+   "横截面积",
+   "材料",
+   "音色"
+  ],
+  "ans": 0,
+  "hint": "只有长度不同，研究音调与长度的关系（控制变量法）。",
+  "v": {
+   "q": "想研究音调是否与琴弦材料有关，应选择（　）",
+   "opts": [
+    "铜弦和尼龙弦，长度、粗细都相同",
+    "粗铜弦和细尼龙弦，长度相同",
+    "长铜弦和短铜弦，粗细相同",
+    "粗铜弦和细铜弦，长度相同"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P0927-14",
+  "kind": "小怪③"
+ },
+ {
+  "type": "mc",
+  "q": "向试管口吹气发声，试管内空气柱越短，发出的音调越（　）；用更大的力吹，改变的是（　）",
+  "opts": [
+   "高；响度",
+   "低；响度",
+   "高；音调",
+   "低；音色"
+  ],
+  "ans": 0,
+  "hint": "空气柱振动发声，越短频率越高、音调越高；用力大小改变振幅→响度。",
+  "v": {
+   "q": "竹哨的活塞从下端 B 塞入，把活塞向上推（越来越靠近吹口），哨音的音调会（　）",
+   "opts": [
+    "变高",
+    "变低",
+    "不变",
+    "先高后低"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1004-10",
+  "kind": "小怪④"
+ },
+ {
+  "type": "mc",
+  "q": "几个相同的玻璃瓶装有不同高度的水。用嘴对着瓶口吹气时，音调最高的是（　）",
+  "opts": [
+   "水最多的瓶子",
+   "水最少的瓶子",
+   "所有瓶子一样高",
+   "空瓶子和满瓶子一样"
+  ],
+  "ans": 0,
+  "hint": "吹气时空气柱振动，水最多→空气柱最短→音调最高。",
+  "v": {
+   "q": "用同样大小的力敲击装水量不同的相同瓶子，水越多音调越低；用不同大小的力敲同一个瓶子，改变的是（　）",
+   "opts": [
+    "音调",
+    "响度",
+    "音色",
+    "声速"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1004-17",
+  "kind": "BOSS",
+  "boss": true
+ }
+]});
+</script></body></html>

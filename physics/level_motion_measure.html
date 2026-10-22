@@ -1,0 +1,183 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>测量与速度赛道</title><link rel="stylesheet" href="../common.css">
+<style>.hud{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}
+.msg{min-height:28px;margin:8px 0;font-size:18px}.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}
+.tag{display:inline-block;color:#fff;border-radius:10px;padding:2px 10px;font-size:16px}.big{font-size:64px;text-align:center;margin:6px 0}</style></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回地图</a>
+<div class="hud"><span id="hearts"></span><span id="stage"></span><span id="coins"></span></div>
+<div class="grid"><div class="col1"><div class="card scene"><h2>🚗 测量与速度赛道</h2><div class="big">📏⏱️🚗</div><p>机械运动易错点：读数要带单位、停表分针过半读后半圈；s-t 图越陡越快；v-t 图匀速是水平线；回声、停车距离要分段画图。</p></div></div>
+<div class="card" id="box"></div></div></div>
+<script src="../common.js"></script><script src="data.js"></script><script src="levels.js"></script><script src="chapters.js"></script>
+<script>
+XXGame.quiz({subject:"physics", levelId:"motion_measure", items:[
+ {
+  "type": "mc",
+  "q": "用分度值为 1 mm 的刻度尺测物体，左端对准 2.00 cm，右端对准 5.65 cm，正确记录是（　）",
+  "opts": [
+   "3.65",
+   "3.65 cm",
+   "5.65 cm",
+   "3.6 cm"
+  ],
+  "ans": 1,
+  "hint": "长度＝5.65 cm－2.00 cm＝3.65 cm，物理量要写数值和单位，并估读到分度值下一位。",
+  "v": {
+   "q": "停表小表盘分针在 2 和 3 之间且已过半格，大表盘秒针指在 35.2 s。停表读数是（　）",
+   "opts": [
+    "125.2 s",
+    "155.2 s",
+    "2.352 s",
+    "35.2 s"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P0927-10",
+  "kind": "小怪①"
+ },
+ {
+  "type": "mc",
+  "q": "停表小表盘读 3 min 且已过半格，大表盘读 41.5 s，停表读数是（　）",
+  "opts": [
+   "221.5 min",
+   "221.5 s",
+   "3.415 s",
+   "341.5 s"
+  ],
+  "ans": 1,
+  "hint": "3 min 41.5 s＝180 s＋41.5 s＝221.5 s，换算成秒后单位要写 s。",
+  "v": {
+   "q": "某速度表指针指在 60 与 80 之间的第 3 小格（每小格 5 km/h），读数是（　）",
+   "opts": [
+    "75 km/h",
+    "75 m/s",
+    "63 km/h",
+    "15 km/h"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1018-11",
+  "kind": "小怪②"
+ },
+ {
+  "type": "mc",
+  "q": "物体以 3 m/s 的速度做匀速直线运动，它的 v-t 图像是（　）",
+  "opts": [
+   "过原点的倾斜直线",
+   "在 v＝3 m/s 处平行于 t 轴的水平直线",
+   "与 v 轴重合的竖直线",
+   "在 v＝0 处的水平线"
+  ],
+  "ans": 1,
+  "hint": "匀速运动速度不变，v-t 图是水平线；过原点斜线在 v-t 图中表示加速。",
+  "v": {
+   "q": "下列 v-t 图像中，表示物体做匀速直线运动的是（　）",
+   "opts": [
+    "平行于 t 轴的水平直线",
+    "过原点的倾斜直线",
+    "平行于 v 轴的竖直线",
+    "向下倾斜的直线"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1004-9",
+  "kind": "小怪③"
+ },
+ {
+  "type": "mc",
+  "q": "小车先以较大速度 v₁ 匀速行驶，后以较小速度 v₂ 匀速行驶。它的 s-t 图像应是（　）",
+  "opts": [
+   "一条过原点的水平线",
+   "先陡后缓、首尾相连的两段上升直线",
+   "先缓后陡、首尾相连的两段上升直线",
+   "两段平行的上升直线，中间断开"
+  ],
+  "ans": 1,
+  "hint": "s-t 图像越陡速度越大；先快后慢→先陡后缓，路程连续不断开。",
+  "v": {
+   "q": "在 s-t 图像中，甲的直线比乙的直线更陡，说明（　）",
+   "opts": [
+    "甲运动得更快",
+    "乙运动得更快",
+    "甲在做加速运动",
+    "甲、乙速度相同"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P0927-11",
+  "kind": "小怪④"
+ },
+ {
+  "type": "mc",
+  "q": "测小车平均速度时，斜面坡度应调得较小，目的是（　）",
+  "opts": [
+   "便于测量路程",
+   "便于测量时间",
+   "让小车跑得更快",
+   "让小车不会停下"
+  ],
+  "ans": 1,
+  "hint": "坡度小，小车下滑慢、用时长，便于准确测量时间；路程用刻度尺量，和坡度无关。",
+  "v": {
+   "q": "小车从斜面顶端 A 滑到底端 C，AC＝90 cm，用时 6 s。若小车过了 A 点才开始计时，则（　）",
+   "opts": [
+    "vAC＝15 cm/s，测得值偏大",
+    "vAC＝15 cm/s，测得值偏小",
+    "vAC＝540 cm/s，测得值偏大",
+    "vAC＝15 cm/s，测得值不受影响"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P0927-12",
+  "kind": "小怪⑤"
+ },
+ {
+  "type": "mc",
+  "q": "司机以 25 m/s 匀速行驶，发现情况后反应过程中汽车匀速前进了 15 m。司机的反应时间是（　）",
+  "opts": [
+   "0.6 s",
+   "1.67 s",
+   "375 s",
+   "0.4 s"
+  ],
+  "ans": 0,
+  "hint": "t＝s/v＝15 m÷25 m/s＝0.6 s。",
+  "v": {
+   "q": "司机以 20 m/s 匀速行驶，反应过程中汽车匀速前进了 12 m，反应时间是（　）",
+   "opts": [
+    "0.6 s",
+    "1.67 s",
+    "240 s",
+    "0.5 s"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P0927-13",
+  "kind": "小怪⑥"
+ },
+ {
+  "type": "mc",
+  "q": "司机以 25 m/s 匀速行驶，平时反应时间 0.6 s，制动后还要滑行 35 m 才停下，前方 60 m 处有障碍物。若酒驾使反应时间变为原来的 2 倍（车速不变），则（　）",
+  "opts": [
+   "停车距离 50 m，不会撞上",
+   "停车距离 65 m，会撞上",
+   "停车距离 80 m，会撞上",
+   "停车距离 60 m，刚好停在障碍物前"
+  ],
+  "ans": 1,
+  "hint": "反应距离 25 m/s×1.2 s＝30 m，总停车距离 30 m＋35 m＝65 m＞60 m，会撞上。",
+  "v": {
+   "q": "司机以 20 m/s 匀速行驶，平时反应时间 0.6 s，制动后滑行 42 m 停下，前方 60 m 处有障碍物。酒驾时反应时间变为 2 倍，则（　）",
+   "opts": [
+    "停车距离 54 m，不会撞上",
+    "停车距离 66 m，会撞上",
+    "停车距离 78 m，会撞上",
+    "停车距离 60 m，刚好停住"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P0927-13",
+  "kind": "BOSS",
+  "boss": true
+ }
+]});
+</script></body></html>

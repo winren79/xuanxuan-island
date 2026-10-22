@@ -68,6 +68,8 @@ def main():
     from collections import Counter
     c = Counter(it["状态"] for it in items)
     print(f"写入 {a.out}: {len(items)} 条, {dict(c)}, NEW={new}")
+    import subprocess  # 每次同步后重建章节错题小关
+    subprocess.run([sys.executable, str(ROOT / "tools" / "gen_auto_levels.py")], check=True)
 
 if __name__ == "__main__":
     main()
