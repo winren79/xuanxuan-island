@@ -14,3 +14,5 @@ window.PHYSICS_LEVELS.push({"id": "whitegas_boss", "title": "白气真相", "fil
 window.PHYSICS_LEVELS.push({"id": "freezegraph_boss", "title": "凝固图像关", "file": "level_freezegraph_boss.html", "icon": "📉", "boss": "P1021-10"});
 window.PHYSICS_LEVELS.push({"id": "coldhot_boss", "title": "冷气热气同源关", "file": "level_coldhot_boss.html", "icon": "🍦", "boss": "P1022-5"});
 window.PHYSICS_LEVELS.push({"id": "steamegg_boss", "title": "蒸蛋汽化关", "file": "level_steamegg_boss.html", "icon": "🥚", "boss": "P1022-6"});
+window.PHYSICS_LEVELS.push({"id": "meltpoint_boss", "title": "熔点冰火关", "file": "level_meltpoint_boss.html", "icon": "🌡️", "boss": "P1025-1"});
+window.PHYSICS_LEVELS.push({"id": "pressurehole_boss", "title": "气压开孔关", "file": "level_pressurehole_boss.html", "icon": "🔬", "boss": "P1025-6"});

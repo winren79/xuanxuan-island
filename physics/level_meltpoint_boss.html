@@ -1,0 +1,111 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>熔点冰火关</title><link rel="stylesheet" href="../common.css">
+<style>.hud{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}
+.msg{min-height:28px;margin:8px 0;font-size:18px}.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}
+.tag{display:inline-block;color:#fff;border-radius:10px;padding:2px 10px;font-size:16px}.big{font-size:64px;text-align:center;margin:6px 0}</style></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回地图</a>
+<div class="hud"><span id="hearts"></span><span id="stage"></span><span id="coins"></span></div>
+<div class="grid"><div class="col1"><div class="card scene"><h2>🌡️ 熔点冰火关</h2><div class="big">🌡️🧊</div><p>新错题 P1025-1：先读熔化图像的熔点，再和冰水0 ℃比较，判断试管里冰是化还是结。</p></div></div>
+<div class="card" id="box"></div></div></div>
+<script src="../common.js"></script><script src="data.js"></script><script src="levels.js"></script><script src="chapters.js"></script>
+<script>
+XXGame.quiz({subject:"physics", levelId:"meltpoint_boss", items:[
+ {
+  "type": "mc",
+  "q": "某晶体熔化图像的平台在 −3 ℃。把装有冰水混合物的试管放入正在熔化的该晶体中，试管内的冰会（　）",
+  "opts": [
+   "逐渐减少",
+   "逐渐增加",
+   "先减少后增加",
+   "数量不变，因为都在熔化"
+  ],
+  "ans": 1,
+  "hint": "冰水混合物是 0 ℃，晶体熔点 −3 ℃ 更低。热从试管传到晶体，0 ℃ 的水放热凝固，冰增加。",
+  "v": {
+   "q": "熔化图像有水平段，熔点读得是 0 ℃。把冰水混合物试管放入正在熔化的该物质中，则（　）",
+   "opts": [
+    "试管内冰逐渐减少",
+    "试管内冰逐渐增加",
+    "试管内冰的数量基本不变",
+    "该物质是非晶体"
+   ],
+   "ans": 2
+  },
+  "whySrc": "P1025-1",
+  "kind": "小怪①"
+ },
+ {
+  "type": "mc",
+  "q": "晶体熔化需要满足的条件是（　）",
+  "opts": [
+   "只要达到熔点",
+   "达到熔点并继续吸热",
+   "只要吸热",
+   "温度高于 100 ℃"
+  ],
+  "ans": 1,
+  "hint": "晶体熔化条件：温度达到熔点，并且继续吸热。",
+  "v": {
+   "q": "大烧杯和插在其中的试管里都是碎冰，加热烧杯，烧杯中的冰大部分熔化时，试管中的冰（　）",
+   "opts": [
+    "也大部分熔化",
+    "不会熔化",
+    "全部熔化",
+    "比烧杯中的冰熔化更快"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1018-12",
+  "kind": "小怪②"
+ },
+ {
+  "type": "mc",
+  "q": "晶体凝固过程中（　）",
+  "opts": [
+   "放热，温度不变",
+   "放热，温度下降",
+   "吸热，温度不变",
+   "吸热，温度下降"
+  ],
+  "ans": 0,
+  "hint": "晶体凝固时放热、温度保持在凝固点不变。",
+  "v": {
+   "q": "某防冻液凝固图像中，温度在 −30 ℃ 保持不变一段时间。下列说法正确的是（　）",
+   "opts": [
+    "凝固过程中温度不断下降",
+    "凝固点是 −30 ℃，最低气温 −20 ℃ 的地区可以使用",
+    "凝固点是 −30 ℃，最低气温 −40 ℃ 的地区可以使用",
+    "凝固过程中温度上升"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1021-10",
+  "kind": "小怪③"
+ },
+ {
+  "type": "mc",
+  "q": "熔化图像有水平段，熔点读得是 0 ℃。把冰水混合物试管放入正在熔化的该物质中，则（　）",
+  "opts": [
+   "试管内冰逐渐减少",
+   "试管内冰逐渐增加",
+   "试管内冰的数量基本不变",
+   "该物质是非晶体"
+  ],
+  "ans": 2,
+  "hint": "两边都是 0 ℃，没有温度差，不发生热传递，冰既不化也不结。有水平段说明是晶体，D 错。",
+  "v": {
+   "q": "某晶体熔化图像的平台在 −3 ℃。把装有冰水混合物的试管放入正在熔化的该晶体中，试管内的冰会（　）",
+   "opts": [
+    "逐渐减少",
+    "逐渐增加",
+    "先减少后增加",
+    "数量不变，因为都在熔化"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1025-1",
+  "kind": "BOSS",
+  "boss": true
+ }
+]});
+</script></body></html>

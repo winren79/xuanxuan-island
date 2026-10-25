@@ -1,0 +1,111 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>气压开孔关</title><link rel="stylesheet" href="../common.css">
+<style>.hud{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}
+.msg{min-height:28px;margin:8px 0;font-size:18px}.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}
+.tag{display:inline-block;color:#fff;border-radius:10px;padding:2px 10px;font-size:16px}.big{font-size:64px;text-align:center;margin:6px 0}</style></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回地图</a>
+<div class="hud"><span id="hearts"></span><span id="stage"></span><span id="coins"></span></div>
+<div class="grid"><div class="col1"><div class="card scene"><h2>🔬 气压开孔关</h2><div class="big">🔬♨️</div><p>新错题 P1025-6：盖子开孔是为了避免气压过大影响沸点；组装时先固定烧杯再调温度计。</p></div></div>
+<div class="card" id="box"></div></div></div>
+<script src="../common.js"></script><script src="data.js"></script><script src="levels.js"></script><script src="chapters.js"></script>
+<script>
+XXGame.quiz({subject:"physics", levelId:"pressurehole_boss", items:[
+ {
+  "type": "mc",
+  "q": "探究水沸腾时，烧杯盖子侧边开一小孔，主要是为了（　）",
+  "opts": [
+   "避免大气压对实验的影响",
+   "避免盖内气压过大影响沸点",
+   "让水蒸气更快跑掉，水更容易沸腾",
+   "方便插入温度计"
+  ],
+  "ans": 1,
+  "hint": "开孔使内外气压相等，避免密封后盖内气压升高、沸点改变。不是「避免大气压」，实验本来就在大气压下做。",
+  "v": {
+   "q": "组装「水的沸腾」实验装置时，在「烧杯」和「温度计」之间，应先固定（　）",
+   "opts": [
+    "温度计，再放烧杯",
+    "烧杯，再调节温度计高度",
+    "两者同时固定",
+    "先固定温度计玻璃泡贴住杯底"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1025-6",
+  "kind": "小怪①"
+ },
+ {
+  "type": "mc",
+  "q": "用沸水给试管里的水隔水加热，试管里的水不能沸腾，原因是（　）",
+  "opts": [
+   "试管里的水太少",
+   "达到沸点后不能继续吸热",
+   "试管里的水沸点更高",
+   "试管挡住了火"
+  ],
+  "ans": 1,
+  "hint": "沸腾条件：达到沸点并继续吸热。内外温度相同，没有热传递。",
+  "v": {
+   "q": "烧杯中的水持续沸腾（100 ℃），里面插着两支试管，分别装水和酒精（酒精沸点约 78 ℃）。能沸腾的是（　）",
+   "opts": [
+    "只有试管中的酒精",
+    "只有试管中的水",
+    "两者都能",
+    "两者都不能"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1019-5",
+  "kind": "小怪②"
+ },
+ {
+  "type": "mc",
+  "q": "关于蒸发和沸腾，下列说法正确的是（　）",
+  "opts": [
+   "蒸发不属于汽化",
+   "蒸发和沸腾都是汽化的方式",
+   "沸腾不需要吸热",
+   "蒸发只在 100 ℃ 时发生"
+  ],
+  "ans": 1,
+  "hint": "汽化有蒸发和沸腾两种方式，都吸热；蒸发在任何温度下都能发生。",
+  "v": {
+   "q": "晾在阳光下的湿衣服变干，发生的物态变化是（　）",
+   "opts": [
+    "蒸发，它属于汽化",
+    "液化",
+    "升华",
+    "熔化"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1012-2",
+  "kind": "小怪③"
+ },
+ {
+  "type": "mc",
+  "q": "组装「水的沸腾」实验装置时，在「烧杯」和「温度计」之间，应先固定（　）",
+  "opts": [
+   "温度计，再放烧杯",
+   "烧杯，再调节温度计高度",
+   "两者同时固定",
+   "先固定温度计玻璃泡贴住杯底"
+  ],
+  "ans": 1,
+  "hint": "自下而上组装：先固定烧杯位置，再调节温度计，使玻璃泡浸没且不碰杯底。",
+  "v": {
+   "q": "探究水沸腾时，烧杯盖子侧边开一小孔，主要是为了（　）",
+   "opts": [
+    "避免大气压对实验的影响",
+    "避免盖内气压过大影响沸点",
+    "让水蒸气更快跑掉，水更容易沸腾",
+    "方便插入温度计"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1025-6",
+  "kind": "BOSS",
+  "boss": true
+ }
+]});
+</script></body></html>
