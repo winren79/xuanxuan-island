@@ -34,7 +34,14 @@ window.PHYSICS_CHAPTERS = [
    "coldhot_boss",
    "steamegg_boss",
    "meltpoint_boss",
-   "pressurehole_boss"
+   "pressurehole_boss",
+   "auto_p1025b_1",
+   "auto_p1025b_4",
+   "auto_p1025b_7",
+   "auto_p1025b_17",
+   "auto_p1025b_18",
+   "auto_p1025b_19",
+   "auto_p1025b_21"
   ]
  },
  {

@@ -1,0 +1,111 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>斜面测速关</title><link rel="stylesheet" href="../common.css">
+<style>.hud{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}
+.msg{min-height:28px;margin:8px 0;font-size:18px}.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}
+.tag{display:inline-block;color:#fff;border-radius:10px;padding:2px 10px;font-size:16px}.big{font-size:64px;text-align:center;margin:6px 0}</style></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回地图</a>
+<div class="hud"><span id="hearts"></span><span id="stage"></span><span id="coins"></span></div>
+<div class="grid"><div class="col1"><div class="card scene"><h2>🚗 斜面测速关</h2><div class="big">⭐</div><p>新错题 P1025b-18：平均速度计算中的单位换算</p></div></div>
+<div class="card" id="box"></div></div></div>
+<script src="../common.js"></script><script src="data.js"></script><script src="levels.js"></script><script src="chapters.js"></script>
+<script>
+XXGame.quiz({subject:"physics", levelId:"auto_p1025b_18", items:[
+ {
+  "type": "mc",
+  "q": "斜面上 A 在 10.0 dm、B 在 6.0 dm，小车从 A 到 B 用时 2 s。v_AB 是（　）",
+  "opts": [
+   "0.2 m/s",
+   "0.4 m/s",
+   "1 m/s",
+   "2 m/s"
+  ],
+  "ans": 0,
+  "hint": "s＝4.0 dm＝0.4 m，t＝2 s，v＝0.4/2＝0.2 m/s。",
+  "v": {
+   "q": "测小车平均速度时，若过了 A 点才开始计时，测得的 v_AC 会（　）",
+   "opts": [
+    "偏大",
+    "偏小",
+    "不变",
+    "无法判断"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1025b-18",
+  "kind": "小怪①"
+ },
+ {
+  "type": "mc",
+  "q": "要让自制液体温度计的示数变化更明显，应选用（　）",
+  "opts": [
+   "更粗的玻璃管",
+   "更细的玻璃管",
+   "更短的瓶子",
+   "更厚的橡皮塞"
+  ],
+  "ans": 1,
+  "hint": "液体膨胀量一定时，管越细液柱变化越大，越灵敏。",
+  "v": {
+   "q": "把装满红色水、插有细玻璃管的小瓶自制温度计从冷水中拿出，放进热水里，细管中的水柱会（　）",
+   "opts": [
+    "上升",
+    "下降",
+    "不变",
+    "先降后不变"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1008-2",
+  "kind": "小怪②"
+ },
+ {
+  "type": "mc",
+  "q": "用温度计测液体温度，下列做法正确的是（　）",
+  "opts": [
+   "玻璃泡碰到烧杯底",
+   "把温度计拿出液体再读数",
+   "玻璃泡全部浸入，示数稳定后读数，视线与液面相平",
+   "刚放进去就马上读数"
+  ],
+  "ans": 2,
+  "hint": "玻璃泡全部浸入且不碰底和壁，稳定后读，读数时留在液体中，视线与液面相平。",
+  "v": {
+   "q": "一支自制温度计有 100 根均匀刻度线（最下面是第 1 根）。放入冰水混合物中液柱在第 20 根，放入标准大气压下的沸水中在第 70 根。它的测量范围是（　）",
+   "opts": [
+    "−38 ℃～160 ℃",
+    "−40 ℃～160 ℃",
+    "−38 ℃～162 ℃",
+    "0 ℃～100 ℃"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1008-5",
+  "kind": "小怪③"
+ },
+ {
+  "type": "mc",
+  "q": "测小车平均速度时，若过了 A 点才开始计时，测得的 v_AC 会（　）",
+  "opts": [
+   "偏大",
+   "偏小",
+   "不变",
+   "无法判断"
+  ],
+  "ans": 0,
+  "hint": "路程仍按 AC 算，时间偏小，由 v＝s/t 可知速度偏大。",
+  "v": {
+   "q": "斜面上 A 在 10.0 dm、B 在 6.0 dm，小车从 A 到 B 用时 2 s。v_AB 是（　）",
+   "opts": [
+    "0.2 m/s",
+    "0.4 m/s",
+    "1 m/s",
+    "2 m/s"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1025b-18",
+  "kind": "BOSS",
+  "boss": true
+ }
+]});
+</script></body></html>

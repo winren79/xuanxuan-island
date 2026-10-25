@@ -16,3 +16,10 @@ window.PHYSICS_LEVELS.push({"id": "coldhot_boss", "title": "冷气热气同源�
 window.PHYSICS_LEVELS.push({"id": "steamegg_boss", "title": "蒸蛋汽化关", "file": "level_steamegg_boss.html", "icon": "🥚", "boss": "P1022-6"});
 window.PHYSICS_LEVELS.push({"id": "meltpoint_boss", "title": "熔点冰火关", "file": "level_meltpoint_boss.html", "icon": "🌡️", "boss": "P1025-1"});
 window.PHYSICS_LEVELS.push({"id": "pressurehole_boss", "title": "气压开孔关", "file": "level_pressurehole_boss.html", "icon": "🔬", "boss": "P1025-6"});
+window.PHYSICS_LEVELS.push({"id": "auto_p1025b_1", "title": "估测小侦探", "file": "level_auto_p1025b_1.html", "icon": "🔍", "boss": "P1025b-1"});
+window.PHYSICS_LEVELS.push({"id": "auto_p1025b_4", "title": "介质传声关", "file": "level_auto_p1025b_4.html", "icon": "🔊", "boss": "P1025b-4"});
+window.PHYSICS_LEVELS.push({"id": "auto_p1025b_7", "title": "频闪测速关", "file": "level_auto_p1025b_7.html", "icon": "📸", "boss": "P1025b-7"});
+window.PHYSICS_LEVELS.push({"id": "auto_p1025b_17", "title": "实验方法关", "file": "level_auto_p1025b_17.html", "icon": "🧪", "boss": "P1025b-17"});
+window.PHYSICS_LEVELS.push({"id": "auto_p1025b_18", "title": "斜面测速关", "file": "level_auto_p1025b_18.html", "icon": "🚗", "boss": "P1025b-18"});
+window.PHYSICS_LEVELS.push({"id": "auto_p1025b_19", "title": "ETC均速关", "file": "level_auto_p1025b_19.html", "icon": "🛣️", "boss": "P1025b-19"});
+window.PHYSICS_LEVELS.push({"id": "auto_p1025b_21", "title": "声速换算关", "file": "level_auto_p1025b_21.html", "icon": "📡", "boss": "P1025b-21"});

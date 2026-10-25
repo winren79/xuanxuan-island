@@ -1,0 +1,111 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>实验方法关</title><link rel="stylesheet" href="../common.css">
+<style>.hud{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}
+.msg{min-height:28px;margin:8px 0;font-size:18px}.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}
+.tag{display:inline-block;color:#fff;border-radius:10px;padding:2px 10px;font-size:16px}.big{font-size:64px;text-align:center;margin:6px 0}</style></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回地图</a>
+<div class="hud"><span id="hearts"></span><span id="stage"></span><span id="coins"></span></div>
+<div class="grid"><div class="col1"><div class="card scene"><h2>🧪 实验方法关</h2><div class="big">⭐</div><p>新错题 P1025b-17：探究声音实验的方法名称</p></div></div>
+<div class="card" id="box"></div></div></div>
+<script src="../common.js"></script><script src="data.js"></script><script src="levels.js"></script><script src="chapters.js"></script>
+<script>
+XXGame.quiz({subject:"physics", levelId:"auto_p1025b_17", items:[
+ {
+  "type": "mc",
+  "q": "敲音叉时乒乓球被弹开，把音叉的微小振动转换成乒乓球跳动，这种实验方法叫（　）",
+  "opts": [
+   "控制变量法",
+   "转换法",
+   "理想实验法",
+   "等效替代法"
+  ],
+  "ans": 1,
+  "hint": "把不易直接观察的振动转换成看得见的跳动，是转换法。",
+  "v": {
+   "q": "逐渐抽走玻璃罩内空气，铃声变小，据此推理「真空不能传声」。这种方法叫（　）",
+   "opts": [
+    "转换法",
+    "控制变量法",
+    "理想实验法（实验推理法）",
+    "类比法"
+   ],
+   "ans": 2
+  },
+  "whySrc": "P1025b-17",
+  "kind": "小怪①"
+ },
+ {
+  "type": "mc",
+  "q": "要让自制液体温度计的示数变化更明显，应选用（　）",
+  "opts": [
+   "更粗的玻璃管",
+   "更细的玻璃管",
+   "更短的瓶子",
+   "更厚的橡皮塞"
+  ],
+  "ans": 1,
+  "hint": "液体膨胀量一定时，管越细液柱变化越大，越灵敏。",
+  "v": {
+   "q": "把装满红色水、插有细玻璃管的小瓶自制温度计从冷水中拿出，放进热水里，细管中的水柱会（　）",
+   "opts": [
+    "上升",
+    "下降",
+    "不变",
+    "先降后不变"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1008-2",
+  "kind": "小怪②"
+ },
+ {
+  "type": "mc",
+  "q": "用温度计测液体温度，下列做法正确的是（　）",
+  "opts": [
+   "玻璃泡碰到烧杯底",
+   "把温度计拿出液体再读数",
+   "玻璃泡全部浸入，示数稳定后读数，视线与液面相平",
+   "刚放进去就马上读数"
+  ],
+  "ans": 2,
+  "hint": "玻璃泡全部浸入且不碰底和壁，稳定后读，读数时留在液体中，视线与液面相平。",
+  "v": {
+   "q": "一支自制温度计有 100 根均匀刻度线（最下面是第 1 根）。放入冰水混合物中液柱在第 20 根，放入标准大气压下的沸水中在第 70 根。它的测量范围是（　）",
+   "opts": [
+    "−38 ℃～160 ℃",
+    "−40 ℃～160 ℃",
+    "−38 ℃～162 ℃",
+    "0 ℃～100 ℃"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1008-5",
+  "kind": "小怪③"
+ },
+ {
+  "type": "mc",
+  "q": "逐渐抽走玻璃罩内空气，铃声变小，据此推理「真空不能传声」。这种方法叫（　）",
+  "opts": [
+   "转换法",
+   "控制变量法",
+   "理想实验法（实验推理法）",
+   "类比法"
+  ],
+  "ans": 2,
+  "hint": "实验抽不到绝对真空，在实验基础上推理到理想情况，叫理想实验法。",
+  "v": {
+   "q": "敲音叉时乒乓球被弹开，把音叉的微小振动转换成乒乓球跳动，这种实验方法叫（　）",
+   "opts": [
+    "控制变量法",
+    "转换法",
+    "理想实验法",
+    "等效替代法"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1025b-17",
+  "kind": "BOSS",
+  "boss": true
+ }
+]});
+</script></body></html>
