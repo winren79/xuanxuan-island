@@ -27,7 +27,7 @@
     if(!s.thresholds||!s.thresholds.length)s.thresholds=[10,25,45,70,100];
     if(!(s.step>0))s.step=30;
     s.pools=s.pools||{}; if(!s.pools.box)s.pools.box=clone(DEFAULT_POOLS.box); if(!s.pools.chest)s.pools.chest=clone(DEFAULT_POOLS.chest);
-    p.redeem=p.redeem||[]; p.boxes=p.boxes||{granted:0}; p.chests=p.chests||{}; p.readAwards=p.readAwards||{}; p.parent=p.parent||{};
+    p.redeem=p.redeem||[]; p.boxes=p.boxes||{granted:0}; p.chests=p.chests||{}; p.readAwards=p.readAwards||{}; p.parent=p.parent||{}; p.practiceLog=p.practiceLog||[];
     return p;
   }
   function save(p){try{localStorage.setItem(KEY,JSON.stringify(p));}catch(e){}}
@@ -47,6 +47,7 @@
     s[levelId]={stars:stars,bestStars:Math.max(old.bestStars||0,stars),correctRate:correctRate,
       bestRate:Math.max(old.bestRate||0,correctRate),date:today(),plays:(old.plays||0)+1};
     var bonus=stars*COIN_PER_STAR; p.coins+=bonus; save(p); G.refreshBars();
+    G.logPractice({kind:"level",subject:subject,id:levelId,stars:stars,correctRate:correctRate});
     setTimeout(function(){G.processRewards(subject);},1600);   // 自动：阶梯盲盒 → 章节通关小船 → 宝箱
     return {bonus:bonus,coins:p.coins,record:s[levelId]};
   };
@@ -286,6 +287,40 @@
         (n.level?' 👉 '+(n.level.auto?'小关':'Boss')+'：'+esc(n.level.title)+'</a>':' <small>（关卡制作中）</small>')+' <small>['+n.status+']</small></div>';});h+='</div>';}
     return h+'<small style="color:#888">错题本更新：'+esc(s.updated||"—")+'</small>';};
 
+  /* ---------- 今日练习日志 / 家长导出 ---------- */
+  G.logPractice=function(ev){var p=load();p.practiceLog=p.practiceLog||[];
+    ev=ev||{};ev.date=ev.date||today();ev.ts=ev.ts||Date.now();
+    p.practiceLog.push(ev);
+    var cut=Date.now()-60*864e5;
+    p.practiceLog=p.practiceLog.filter(function(x){return !x.ts||x.ts>=cut;});
+    if(p.practiceLog.length>2000)p.practiceLog=p.practiceLog.slice(-1500);
+    save(p);};
+  G.levelTitle=function(subject,id){var L=window[upper(subject)+"_LEVELS"]||[];for(var i=0;i<L.length;i++)if(L[i].id===id)return L[i].title||id;return id;};
+  G.itemTitle=function(subject,id){var it=G.dataItem(subject,id);if(!it)return id;var kp=String(it["知识点"]||"").split(/[；;]/)[0];return id+(kp?" · "+kp:"");};
+  G.todayPracticeText=function(day){day=day||today();var p=load(),logs=(p.practiceLog||[]).filter(function(x){return x.date===day;});
+    var lines=["【轩轩闯关岛 · 今日练习】"+day,""];
+    function block(subject,label){
+      var lv=logs.filter(function(x){return x.subject===subject&&x.kind==="level";});
+      var va=logs.filter(function(x){return x.subject===subject&&x.kind==="variant";});
+      // 兼容：日志未启用前，用关卡最近日期=今天 作后备
+      if(!lv.length){var rec=p.subjects[subject]||{};Object.keys(rec).forEach(function(id){if(rec[id]&&rec[id].date===day)lv.push({id:id,stars:rec[id].stars,correctRate:rec[id].correctRate,fallback:1});});}
+      lines.push(label);
+      if(!lv.length&&!va.length){lines.push("今天没有新练习。");lines.push("");return;}
+      if(lv.length){lines.push("关卡 "+lv.length+" 场：");lv.forEach(function(x){var rate=x.correctRate!=null?Math.round(x.correctRate*100)+"%":"—";
+        lines.push("- "+G.levelTitle(subject,x.id)+"　⭐"+(x.stars||"?")+"　正确率 "+rate+(x.fallback?"（按最近日期推断）":""));});}
+      if(va.length){var ok=va.filter(function(x){return x.ok;}).length,bad=va.length-ok;
+        lines.push("变式 "+va.length+" 题（对 "+ok+" / 错 "+bad+"）：");
+        va.forEach(function(x){lines.push("- "+(x.ok?"✅":"❌")+" "+G.itemTitle(subject,x.id)+(x.status?" → "+x.status:""));});}
+      else{var c=G.statusCount(subject,window[upper(subject)+"_DATA"]);
+        lines.push("变式明细尚未记入今日日志；当前累计：未练 "+c["未练"]+" / 已练 "+c["已练"]+" / 已过关 "+c["已过关"]+"（请继续练，之后会按题记录）");}
+      lines.push("");}
+    block("math","【数学】");block("physics","【物理】");
+    lines.push("用法：复制整段发群里或私信周老师/物理老师，即可据此写当日反馈。");
+    return lines.join("\n");};
+  G.copyText=function(t){if(navigator.clipboard&&navigator.clipboard.writeText)return navigator.clipboard.writeText(t);
+    return new Promise(function(res,rej){var a=document.createElement("textarea");a.value=t;a.style.position="fixed";a.style.left="-9999px";document.body.appendChild(a);a.select();
+      try{document.execCommand("copy");res();}catch(e){rej(e);}document.body.removeChild(a);});};
+
   /* ---------- 家长周报 ---------- */
   G.reportHTML=function(){var p=load(),h="";[["math","🔢 数学岛"],["physics","⚡ 物理岛"]].forEach(function(s){var L=window[upper(s[0])+"_LEVELS"]||[],rec=p.subjects[s[0]]||{},ids=L.map(function(l){return l.id;});
       Object.keys(rec).forEach(function(k){if(ids.indexOf(k)<0)ids.push(k);});h+='<div class="card"><h2>'+s[1]+'</h2>';
@@ -379,7 +414,8 @@
   /* 游戏内状态只看轩轩在闯关岛的作答，错题本/数据里的「状态」不作为起点（家长 10-22 要求全部从未练开始） */
   G.itemStatus=function(subject,it){return ((load().vstatus||{})[subject]||{})[it.id]||"未练";};
   G.setItemStatus=function(subject,id,ok){var p=load();p.vstatus=p.vstatus||{};var m=p.vstatus[subject]=p.vstatus[subject]||{};
-    var cur=m[id]||"未练",nw=ok?"已过关":"已练";if(RANK[nw]>RANK[cur])m[id]=nw;save(p);return m[id];};
+    var cur=m[id]||"未练",nw=ok?"已过关":"已练";if(RANK[nw]>RANK[cur])m[id]=nw;save(p);
+    G.logPractice({kind:"variant",subject:subject,id:id,ok:!!ok,status:m[id]||nw});return m[id];};
   G.statusTag=function(st){var c={"未练":"#C01F1F","已练":"#D9A400","已过关":"#1E7B34"}[String(st).split(" ")[0]]||"#888";
     return '<span class="sttag" style="display:inline-block;background:'+c+';color:#fff;border-radius:10px;padding:1px 8px;font-size:14px;margin-left:4px">'+st+'</span>';};
   G.statusCount=function(subject,data){var c={"未练":0,"已练":0,"已过关":0};((data&&data.items)||[]).forEach(function(it){c[G.itemStatus(subject,it)]++;});return c;};
