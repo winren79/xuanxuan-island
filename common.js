@@ -1,4 +1,4 @@
-/* 轩轩闯关岛 公共脚本 v3 —— 两科共用
+/* 轩轩闯关岛 公共脚本 v3.1 —— 两科共用（错题小关严格自主作答）
    进度：localStorage["xuanxuan-island-progress"]；录音等大数据：IndexedDB "xuanxuan-island"/recordings
    云同步：Supabase island_progress / island_practice_log（多设备；失败静默，不挡练题）
    对外接口见 接入规则.md。旧接口 finish/correct/totals/load/save/bar/addCoins/wrongStats/wrongHTML 保持不变。 */
@@ -426,36 +426,53 @@
         '<a class="btn green" id="tomap" href="index.html">返回地图</a><a class="btn ghost" href="../index.html">回首页</a>';}
     render();};
 
-  /* 自动错题小关：每题 = 错题本原题(自评) + 变式(自评)。原题做错 → 扣❤️ + 鼓励 + 讲解卡；变式做对可复活。 */
+  /* 自动错题小关（严格自主作答，2026-10-26）：
+     出题 → 无答案提示下作答（系统自动判）→ 对了才记对+积分；
+     错了只给引导提示、不计分，可再试 / 下一道变式，直到无提示做对才给分。
+     不再使用「看答案后自评」。 */
   G.selfQuiz=function(cfg){var ids=cfg.ids,items=ids.map(function(id){return G.dataItem(cfg.subject,id);}).filter(Boolean),
-    idx=0,step=0,MAXH=3,hearts=MAXH,first=0,missed=false,$=function(id){return document.getElementById(id);};
+    idx=0,vi=0,MAXH=3,hearts=MAXH,first=0,tries=0,phase="review",$=function(id){return document.getElementById(id);};
+    var MAX_TRIES=3;
     function hud(){$("hearts").textContent="❤️".repeat(hearts)+"🤍".repeat(MAXH-hearts);$("stage").textContent=Math.min(idx+1,items.length)+"/"+items.length;$("coins").textContent="🪙 "+G.totals().coins;}
     function card(it){return {id:cfg.subject+":"+it.id,"错因":it["为什么错"],"概念":it["概念"],"公式":it["公式"]};}
-    function render(msg){var it=items[idx],v=(it["变式"]||[])[0];hud();
-      var orig=step===0,h='<span class="tag" style="background:'+(orig?"#D96B00":"#1E7B34")+'">'+(orig?"原题 · 错题本 "+esc(it.id):"变式题 · 举一反三")+'</span>'+
-        '<p style="opacity:.7">'+esc(it["知识点"]||"")+'</p><div class="qtext" style="font-size:20px">'+nl(orig?it["原题"]:v.q)+'</div>'+
-        (msg?'<div class="msg">'+msg+'</div>':'')+(!orig&&missed?G.whyCardHTML(card(it)):'')+
-        '<p style="opacity:.75">先在草稿纸上做完，再看答案自己判对错。</p><button class="btn orange" id="show">想好了，看答案</button><div id="res"></div>';
-      if(!orig){$("box").innerHTML='<span class="tag" style="background:#1E7B34">变式题 · 举一反三</span> '+G.statusTag(G.itemStatus(cfg.subject,it))+(msg?'<div class="msg">'+msg+'</div>':'')+'<div id="vw"></div>';
-        G.variantWidget($("vw"),v,{subject:cfg.subject,item:it,onDone:function(ok){varDone(ok);}});return;}
-      $("box").innerHTML=h;
-      $("show").onclick=function(){this.remove();$("res").innerHTML='<div class="hint"><b>答案：</b>'+nl(orig?it["正确答案"]:v.a)+(orig?'':'<br><b>解析：</b>'+nl(v.explain||""))+'</div>'+
-        '<button class="btn green" id="yes">✅ 我做对了</button><button class="btn red" id="no">❌ 我做错了</button>';$("yes").onclick=function(){mark(true);};$("no").onclick=function(){mark(false);};};}
-    function nextStep(){var it=items[idx];if(step===0&&(it["变式"]||[]).length){step=1;render();}else{step=0;missed=false;idx++;idx<items.length?render():end();}}
-    function mark(ok){var it=items[idx];
-      if(step===0){if(ok){first++;G.correct();missed=false;nextStep();}else{missed=true;hearts--;G.wrong();if(hearts<=0&&!(it["变式"]||[]).length)return gameOver();step=1;render('<span class="bad">没关系！先看讲解卡，再做变式题'+(hearts<=0?'——答对就复活！':'，答对可复活 1 ❤️')+'</span>');}return;}
-      }
-    function varDone(ok){if(ok===null)return nextStep();/* 金币/语音/状态已由 variantWidget 处理 */
-      if(ok){if(missed)hearts=Math.min(MAXH,hearts+1);nextStep();}else{if(hearts<=0)return gameOver();if(missed){hearts--;if(hearts<=0)return gameOver();}nextStep();}}
-    function gameOver(){hud();$("box").innerHTML='<h2>💔 挑战失败</h2><p>❤️ 用完了，别灰心，再来一次！</p><button class="btn red" onclick="location.reload()">重新挑战</button><a class="btn ghost" href="index.html">返回地图</a>';}
+    function variants(it){return it["变式"]||[];}
+    function review(){var it=items[idx];phase="review";tries=0;vi=0;hud();
+      $("box").innerHTML='<span class="tag" style="background:#D96B00">回顾原错题 · '+esc(it.id)+'</span>'+
+        '<p style="opacity:.7">'+esc(it["知识点"]||"")+'</p><div class="qtext" style="font-size:20px">'+nl(it["原题"])+'</div>'+
+        '<p style="opacity:.75">先在草稿纸上自己想一想。点下面开始作答后，系统自动判分；做题时不会出现答案。</p>'+
+        '<button class="btn green big" id="go">开始作答（无答案提示）</button>';
+      $("go").onclick=function(){phase="quiz";showVar();};}
+    function showVar(){var it=items[idx],vs=variants(it);hud();
+      if(!vs.length){$("box").innerHTML='<p class="bad">本题暂无变式，已跳过</p><button class="btn green" id="nx">下一题</button>';$("nx").onclick=nextItem;return;}
+      if(vi>=vs.length)vi=0; // 只有一道时循环再试；多道时轮换
+      var tip=tries?('<div class="msg"><span class="bad">上一题做错了，不计分。看看引导后再做'+(vs.length>1?'下一道变式':'同一题')+'——仍然没有答案提示。</span></div>'):'';
+      $("box").innerHTML='<span class="tag" style="background:#1E7B34">作答题 · '+esc(it.id)+' · 第 '+(tries+1)+' 次</span> '+G.statusTag(G.itemStatus(cfg.subject,it))+
+        tip+'<div id="vw"></div>';
+      G.variantWidget($("vw"),vs[vi],{subject:cfg.subject,item:it,strict:true,onDone:onVarDone});}
+    function onVarDone(ok,meta){meta=meta||{};
+      if(ok===null){nextItem();return;}
+      if(ok){if(tries===0)first++; /* 首次提交就对才计入一次答对率；积分已在 strict widget 发放 */
+        if(meta.awarded){/* already */} 
+        nextItem();return;}
+      /* 做错：扣心、引导已在 widget 展示；不计分 */
+      tries++;hearts=Math.max(0,hearts-1);hud();
+      if(hearts<=0)return gameOver();
+      if(tries>=MAX_TRIES){
+        $("box").insertAdjacentHTML("beforeend",'<div class="hint" style="margin-top:12px"><b>本题先记「已练」、不计分。</b>答案仅在放弃后给出，供订正：'+esc(G.answerText(G.vNorm(variants(items[idx])[vi])))+'</div><button class="btn orange" id="skip">下一题</button>');
+        var sk=document.getElementById("skip");if(sk)sk.onclick=nextItem;return;}
+      vi=variants(items[idx]).length>1?(vi+1)%variants(items[idx]).length:vi;
+      setTimeout(showVar,600);}
+    function nextItem(){idx++;if(idx<items.length)review();else end();}
+    function gameOver(){hud();$("box").innerHTML='<h2>💔 挑战失败</h2><p>❤️ 用完了。做错不计分，回去休息一下再来！</p><button class="btn red" onclick="location.reload()">重新挑战</button><a class="btn ghost" href="index.html">返回地图</a>';}
     function end(){var rate=items.length?first/items.length:1,stars=rate>=.85?3:rate>=.55?2:1,res=G.finish(cfg.subject,cfg.levelId,stars,rate);hud();
       $("box").innerHTML='<h1 id="result">🎉 通关！</h1><div style="text-align:center;font-size:48px">'+"⭐".repeat(stars)+"☆".repeat(3-stars)+'</div>'+
-        '<p style="text-align:center">原题一次做对 '+first+'/'+items.length+'（正确率 '+Math.round(rate*100)+'%）<br>过关奖励 +'+res.bonus+' 🪙，金币总数 '+res.coins+'</p>'+
+        '<p style="text-align:center">首次无提示做对 '+first+'/'+items.length+'（正确率 '+Math.round(rate*100)+'%）<br>过关奖励 +'+res.bonus+' 🪙，金币总数 '+res.coins+'</p>'+
+        '<p style="text-align:center;opacity:.75;font-size:14px">评分规则：做题时无答案；系统自动判；错了只给引导、不计分；无提示做对才加分。</p>'+
         '<a class="btn green" id="tomap" href="index.html">返回地图</a><a class="btn ghost" href="../index.html">回首页</a>';}
-    G._quiz={item:function(){return items[idx];},index:function(){return idx;},hearts:function(){return hearts;},step:function(){return step;}};
-    if(!items.length){$("box").innerHTML="<p>本关暂无题目</p>";return;}render();};
+    G._quiz={item:function(){return items[idx];},index:function(){return idx;},hearts:function(){return hearts;},tries:function(){return tries;}};
+    if(!items.length){$("box").innerHTML="<p>本关暂无题目</p>";return;}review();};
 
-  document.addEventListener("DOMContentLoaded",musicButton);
+  document.addEventListenerer("DOMContentLoaded",musicButton);
   if(document.readyState!=="loading")musicButton();
 
   /* ---------- 可作答变式题：统一格式 + 自动判分 + 逐题状态 ----------
@@ -518,27 +535,47 @@
     if(o.anyOrder){for(var k=o.from;k<inputs.length;k++){for(var j=o.from;j<o.blanks.length;j++){if(!used[j]&&G.matchAny(inputs[k],o.blanks[j])){used[j]=1;res[k]=true;break;}}}}
     return res;};
   G.answerText=function(o){return o.type==="choice"?o.options[o.ans]:o.blanks.map(function(a,k){return (o.labels[k]||"")+" "+a[0].replace(/^~/,"≈");}).join("；")+(o.anyOrder?"（顺序不限）":"");};
-  /* 渲染一道可作答变式题。opt:{subject,item,onDone(ok)}；答对 +金币+表扬；答错 鼓励+讲解卡+正确答案 */
-  G.variantWidget=function(el,v,opt){var o=G.vNorm(v),it=opt.item,done=false,sel=-1;
+  /* 渲染一道可作答变式题。opt:{subject,item,onDone(ok,meta),strict}
+     默认：答对+金币；答错鼓励+讲解卡+正确答案。
+     strict:true（错题小关）：做题时不泄答案；答对才加分；答错只给引导提示、不计分，由上层决定再试或换变式。 */
+  G.variantWidget=function(el,v,opt){var o=G.vNorm(v),it=opt.item,done=false,sel=-1,strict=!!opt.strict;
     if(!o||!o.ok){el.innerHTML='<p class="bad">这道变式题缺答案，已跳过</p><button class="btn green" id="vx">下一题 →</button>';el.querySelector("#vx").onclick=function(){opt.onDone&&opt.onDone(null);};return;}
-    var h='<div class="vstem" style="font-size:20px">'+nl(o.stem)+'</div>';
-    if(o.type==="choice")h+=o.options.map(function(x,j){return '<button class="opt vopt" data-j="'+j+'">'+esc(x)+'</button>';}).join("");
-    else h+=o.labels.map(function(l,k){return '<label style="display:block;margin:8px 0;font-size:18px">'+esc(l)+' <input class="vin" data-k="'+k+'" autocomplete="off" style="font-size:20px;padding:6px 10px;border:3px solid var(--orange);border-radius:10px;width:min(260px,90%)"></label>';}).join("")+
-      '<small style="opacity:.7">根号可输入 √ 或 sqrt，分数写 a/b，坐标写 (x,y)'+(o.anyOrder?'；多个答案顺序不限':'')+'</small>';
-    h+='<div class="msg" id="vmsg"></div><button class="btn green" id="vsub">提交答案</button><div id="vres"></div>';el.innerHTML=h;
-    var $q=function(s){return el.querySelector(s);};
-    [].forEach.call(el.querySelectorAll(".vopt"),function(b){b.onclick=function(){if(done)return;sel=+b.dataset.j;[].forEach.call(el.querySelectorAll(".vopt"),function(x){x.classList.toggle("sel",x===b);});};});
-    $q("#vsub").onclick=function(){if(done)return;var ok,marks;
-      if(o.type==="choice"){if(sel<0){$q("#vmsg").innerHTML='<span class="bad">先选一个答案哦</span>';return;}ok=sel===o.ans;}
-      else{var ins=[].map.call(el.querySelectorAll(".vin"),function(x){return x.value;});if(ins.some(function(x){return !x.trim();})){$q("#vmsg").innerHTML='<span class="bad">还有空没填哦</span>';return;}
-        marks=G.checkFill(o,ins);ok=marks.every(Boolean);[].forEach.call(el.querySelectorAll(".vin"),function(x,k){x.style.borderColor=marks[k]?"#1E7B34":"#C01F1F";x.disabled=true;});}
-      done=true;$q("#vsub").remove();var st=it?G.setItemStatus(opt.subject,it.id,ok):null;
-      if(o.type==="choice"){var bs=el.querySelectorAll(".vopt");bs[o.ans].classList.add("right");if(!ok)bs[sel].classList.add("wrong");}
-      var r=$q("#vres"),card=it?{id:opt.subject+":"+it.id,"错因":it["为什么错"],"概念":it["概念"],"公式":it["公式"]}:null;
-      if(ok){G.correct();r.innerHTML='<p class="ok" style="font-size:20px">✅ 答对了！+'+G.COIN_PER_CORRECT+' 🪙 '+(st?G.statusTag(st):'')+'</p><div class="hint"><b>解析：</b>'+nl(o.explain)+'</div>';}
-      else{G.wrong();r.innerHTML='<p class="bad" style="font-size:20px">❌ 差一点！别灰心 '+(st?G.statusTag(st):'')+'</p><div class="hint"><b>正确答案：</b>'+esc(G.answerText(o))+'<br><b>解析：</b>'+nl(o.explain)+'</div>'+(card?G.whyCardHTML(card):'');
-        if(card)G.bindWhyCard(r,card);}
-      r.insertAdjacentHTML("beforeend",'<button class="btn green big" id="vx">下一题 →</button>');$q("#vx").onclick=function(){opt.onDone&&opt.onDone(ok);};G.refreshBars&&G.refreshBars();};};
+    function paint(){var h='<div class="vstem" style="font-size:20px">'+nl(o.stem)+'</div>';
+      if(o.type==="choice")h+=o.options.map(function(x,j){return '<button class="opt vopt" data-j="'+j+'">'+esc(x)+'</button>';}).join("");
+      else h+=o.labels.map(function(l,k){return '<label style="display:block;margin:8px 0;font-size:18px">'+esc(l)+' <input class="vin" data-k="'+k+'" autocomplete="off" style="font-size:20px;padding:6px 10px;border:3px solid var(--orange);border-radius:10px;width:min(260px,90%)"></label>';}).join("")+
+        '<small style="opacity:.7">根号可输入 √ 或 sqrt，分数写 a/b，坐标写 (x,y)'+(o.anyOrder?'；多个答案顺序不限':'')+'</small>';
+      h+='<div class="msg" id="vmsg"></div><button class="btn green" id="vsub">提交答案</button><div id="vres"></div>';el.innerHTML=h;
+      sel=-1;done=false;bind();}
+    function bind(){var $q=function(s){return el.querySelector(s);};
+      [].forEach.call(el.querySelectorAll(".vopt"),function(b){b.onclick=function(){if(done)return;sel=+b.dataset.j;[].forEach.call(el.querySelectorAll(".vopt"),function(x){x.classList.toggle("sel",x===b);});};});
+      $q("#vsub").onclick=function(){if(done)return;var ok,marks;
+        if(o.type==="choice"){if(sel<0){$q("#vmsg").innerHTML='<span class="bad">先选一个答案哦</span>';return;}ok=sel===o.ans;}
+        else{var ins=[].map.call(el.querySelectorAll(".vin"),function(x){return x.value;});if(ins.some(function(x){return !x.trim();})){$q("#vmsg").innerHTML='<span class="bad">还有空没填哦</span>';return;}
+          marks=G.checkFill(o,ins);ok=marks.every(Boolean);[].forEach.call(el.querySelectorAll(".vin"),function(x,k){x.style.borderColor=marks[k]?"#1E7B34":"#C01F1F";x.disabled=true;});}
+        done=true;$q("#vsub").remove();
+        var r=$q("#vres"),card=it?{id:opt.subject+":"+it.id,"错因":it["为什么错"],"概念":it["概念"],"公式":it["公式"]}:null;
+        if(o.type==="choice"){var bs=el.querySelectorAll(".vopt");if(!strict)bs[o.ans].classList.add("right");if(!ok&&sel>=0)bs[sel].classList.add("wrong");else if(ok)bs[o.ans].classList.add("right");}
+        if(ok){var st=it?G.setItemStatus(opt.subject,it.id,true):null;G.correct();
+          r.innerHTML='<p class="ok" style="font-size:20px">✅ 答对了！+'+G.COIN_PER_CORRECT+' 🪙 '+(st?G.statusTag(st):'')+'</p>'+(o.explain?'<div class="hint"><b>解析：</b>'+nl(o.explain)+'</div>':'');
+          r.insertAdjacentHTML("beforeend",'<button class="btn green big" id="vx">下一题 →</button>');
+          $q("#vx").onclick=function(){opt.onDone&&opt.onDone(true,{awarded:true});};G.refreshBars&&G.refreshBars();return;}
+        /* 做错 */
+        G.wrong();
+        if(it)G.setItemStatus(opt.subject,it.id,false);
+        if(strict){
+          r.innerHTML='<p class="bad" style="font-size:20px">❌ 做错了，本题不计分</p><div class="hint"><b>引导（不是本题答案）：</b><br>'+
+            (it&&it["为什么错"]?('<b>错因提醒：</b>'+nl(it["为什么错"])+'<br>'):'')+
+            (it&&it["概念"]?('<b>概念：</b>'+nl(it["概念"])+'<br>'):'')+
+            (it&&it["公式"]?('<b>公式：</b>'+nl(it["公式"])+'<br>'):'')+
+            '<span style="opacity:.8">请根据引导再做下一道；做题时仍然不会显示答案。</span></div>'+(card?G.whyCardHTML(card):'');
+          if(card)G.bindWhyCard(r,card);
+          r.insertAdjacentHTML("beforeend",'<button class="btn orange big" id="vx">继续（再练，不计刚才那次）</button>');
+          $q("#vx").onclick=function(){opt.onDone&&opt.onDone(false,{awarded:false});};G.refreshBars&&G.refreshBars();return;}
+        var st=it?G.itemStatus(opt.subject,it):null;
+        r.innerHTML='<p class="bad" style="font-size:20px">❌ 差一点！别灰心 '+(st?G.statusTag(st):'')+'</p><div class="hint"><b>正确答案：</b>'+esc(G.answerText(o))+'<br><b>解析：</b>'+nl(o.explain)+'</div>'+(card?G.whyCardHTML(card):'');
+        if(card)G.bindWhyCard(r,card);
+        r.insertAdjacentHTML("beforeend",'<button class="btn green big" id="vx">下一题 →</button>');$q("#vx").onclick=function(){opt.onDone&&opt.onDone(false,{awarded:false});};G.refreshBars&&G.refreshBars();};}
+    paint();};
   /* 变式练习页：筛选（全部 / 未过关 / 未练）+ 状态标签 + 自动判分。“接上题”组保持原顺序（列表按错题→变式顺序，不打乱）。 */
   G.variantPractice=function(el,subject,data){var items=(data&&data.items)||[],mode=sessionStorage.getItem("xx-var-mode-"+subject)||"todo",queue=[],qi=0;
     function build(){queue=[];items.forEach(function(it){var st=G.itemStatus(subject,it);if(mode==="todo"&&st==="已过关")return;if(mode==="new"&&st!=="未练")return;

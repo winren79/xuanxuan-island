@@ -12,6 +12,6 @@
  if(!L){document.getElementById("box").innerHTML='<p>找不到这一关，<a href="index.html">返回地图</a></p>';return;}
  var ch=(window.MATH_CHAPTERS||[]).filter(function(c){return c.levels.indexOf(id)>=0;})[0];
  document.title=L.title;document.getElementById("ttl").textContent=L.icon+" "+(ch?ch.title+" · ":"")+L.title;
- document.getElementById("intro").textContent="本关 "+L.items.length+" 道错题本原题，每题后面跟一道变式题。原题做错扣 1 ❤️，看讲解卡后做对变式题可复活。";
+ document.getElementById("intro").textContent="本关 "+L.items.length+" 道错题变式。先回顾原错题（不给答案），再作答；系统自动判分。做错只给引导、不计分，无提示做对才加分。";
  XXGame.selfQuiz({subject:"math",levelId:id,ids:L.items});})();
 </script></body></html>
