@@ -1,5 +1,6 @@
 /* 轩轩闯关岛 公共脚本 v3 —— 两科共用
    进度：localStorage["xuanxuan-island-progress"]；录音等大数据：IndexedDB "xuanxuan-island"/recordings
+   云同步：Supabase island_progress / island_practice_log（多设备；失败静默，不挡练题）
    对外接口见 接入规则.md。旧接口 finish/correct/totals/load/save/bar/addCoins/wrongStats/wrongHTML 保持不变。 */
 (function(){
   var KEY="xuanxuan-island-progress", COIN_PER_CORRECT=10, COIN_PER_STAR=20, READ_COINS=20, CASH_MAX=20;
@@ -30,7 +31,63 @@
     p.redeem=p.redeem||[]; p.boxes=p.boxes||{granted:0}; p.chests=p.chests||{}; p.readAwards=p.readAwards||{}; p.parent=p.parent||{}; p.practiceLog=p.practiceLog||[];
     return p;
   }
-  function save(p){try{localStorage.setItem(KEY,JSON.stringify(p));}catch(e){}}
+  /* ---------- Supabase 云同步（多设备） ---------- */
+  var CLOUD={
+    url:"https://txeflglqiucrxbzogmfr.supabase.co",
+    anon:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4ZWZsZ2xxaXVjcnhiem9nbWZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5NTkxODYsImV4cCI6MjEwODUzNTE4Nn0.ZI9UG5oVZq1_rVuIAsVND6bHUxhqQnxkGPr7JnCxysw",
+    studentId:"xuanxuan"
+  };
+  var META_KEY="xuanxuan-island-cloud-meta", _pushTimer=null, _cloudBusy=false, _cloudReady=false;
+  var STATUS_RANK={"未练":0,"已练":1,"已过关":2};
+  function cloudMeta(){try{return JSON.parse(localStorage.getItem(META_KEY))||{};}catch(e){return {};}}
+  function setCloudMeta(m){try{localStorage.setItem(META_KEY,JSON.stringify(m||{}));}catch(e){}}
+  function cloudHeaders(extra){var h={"apikey":CLOUD.anon,"Authorization":"Bearer "+CLOUD.anon,"Content-Type":"application/json"};if(extra)for(var k in extra)h[k]=extra[k];return h;}
+  function cloudFetch(path,opt){opt=opt||{};return fetch(CLOUD.url+"/rest/v1/"+path,{method:opt.method||"GET",headers:cloudHeaders(opt.headers||{}),body:opt.body||undefined}).then(function(r){if(!r.ok)throw new Error("cloud "+r.status);return r.status===204?null:r.json().catch(function(){return null;});});}
+  function save(p){try{localStorage.setItem(KEY,JSON.stringify(p));}catch(e){}scheduleCloudPush();}
+  function scheduleCloudPush(){if(!CLOUD.url||_cloudBusy)return;clearTimeout(_pushTimer);_pushTimer=setTimeout(function(){cloudPush();},800);}
+  function mergeSubjects(a,b){var out=clone(a||{});Object.keys(b||{}).forEach(function(subj){out[subj]=out[subj]||{};Object.keys(b[subj]||{}).forEach(function(lid){var L=out[subj][lid],R=b[subj][lid];if(!R)return;if(!L){out[subj][lid]=clone(R);return;}
+    var bestStars=Math.max(+L.bestStars||0,+R.bestStars||0),bestRate=Math.max(+L.bestRate||0,+R.bestRate||0),plays=Math.max(+L.plays||0,+R.plays||0);
+    var useR=(R.date||"")>(L.date||"")||((R.date||"")===(L.date||"")&&(+R.bestStars||0)>(+L.bestStars||0));
+    var m=clone(useR?R:L);m.bestStars=bestStars;m.bestRate=bestRate;m.plays=plays;out[subj][lid]=m;});});return out;}
+  function mergeVstatus(a,b){var out=clone(a||{});Object.keys(b||{}).forEach(function(subj){out[subj]=out[subj]||{};Object.keys(b[subj]||{}).forEach(function(id){var L=out[subj][id]||"未练",R=b[subj][id]||"未练";out[subj][id]=(STATUS_RANK[R]||0)>(STATUS_RANK[L]||0)?R:L;});});return out;}
+  function logKey(x){return [x.ts||0,x.kind||"",x.subject||"",x.id||""].join("|");}
+  function mergeLogs(a,b){var map={},arr=(a||[]).concat(b||[]);arr.forEach(function(x){if(!x)return;var k=logKey(x);if(!map[k])map[k]=x;});
+    var out=Object.keys(map).map(function(k){return map[k];});out.sort(function(u,v){return (u.ts||0)-(v.ts||0);});
+    var cut=Date.now()-60*864e5;out=out.filter(function(x){return !x.ts||x.ts>=cut;});if(out.length>2000)out=out.slice(-1500);return out;}
+  function mergeProgress(local,remote){var out=clone(local||{});var r=remote||{};
+    out.subjects=mergeSubjects(out.subjects,r.subjects);
+    out.vstatus=mergeVstatus(out.vstatus,r.vstatus);
+    out.practiceLog=mergeLogs(out.practiceLog,r.practiceLog);
+    out.coins=Math.max(+out.coins||0,+r.coins||0);
+    // 远端较新：settings / redeem / boxes / chests / readAwards / parent / vstatusVer 以远端为主
+    ["settings","redeem","boxes","chests","readAwards","parent","vstatusVer","version"].forEach(function(k){if(r[k]!=null)out[k]=clone(r[k]);});
+    return out;}
+  function cloudPush(){if(!CLOUD.url)return Promise.resolve();
+    var p;try{p=JSON.parse(localStorage.getItem(KEY))||{};}catch(e){p={};}
+    return cloudFetch("island_progress?on_conflict=student_id",{method:"POST",headers:{"Prefer":"resolution=merge-duplicates,return=minimal"},
+      body:JSON.stringify({student_id:CLOUD.studentId,payload:p,updated_at:new Date().toISOString()})})
+      .then(function(){var m=cloudMeta();m.updated_at=new Date().toISOString();setCloudMeta(m);})
+      .catch(function(){});}
+  function cloudPull(){if(!CLOUD.url)return Promise.resolve();
+    return cloudFetch("island_progress?student_id=eq."+encodeURIComponent(CLOUD.studentId)+"&select=payload,updated_at")
+      .then(function(rows){rows=rows||[];var meta=cloudMeta();
+        if(!rows.length){return cloudPush();}
+        var remote=rows[0], rAt=remote.updated_at||"", lAt=meta.updated_at||"";
+        if(rAt&&lAt&&rAt<=lAt){return cloudPush();} // 远端未更新：把本机较新进度推上去
+        var local;try{local=JSON.parse(localStorage.getItem(KEY))||{};}catch(e){local={};}
+        var merged=mergeProgress(local,remote.payload||{});
+        _cloudBusy=true;try{localStorage.setItem(KEY,JSON.stringify(merged));}catch(e){}
+        setCloudMeta({updated_at:rAt||new Date().toISOString()});_cloudBusy=false;
+        try{G.refreshBars&&G.refreshBars();}catch(e){}
+        // 合并后若本地曾有更新，再推一次合并结果
+        return cloudPush();})
+      .catch(function(){});}
+  function cloudLogPractice(ev){if(!CLOUD.url||!ev)return;
+    var title="";try{title=ev.kind==="level"?G.levelTitle(ev.subject,ev.id):G.itemTitle(ev.subject,ev.id);}catch(e){title=ev.id||"";}
+    var row={student_id:CLOUD.studentId,event_date:ev.date||today(),subject:ev.subject||null,kind:ev.kind||null,item_id:ev.id||null,
+      ok:ev.ok==null?null:!!ev.ok,stars:ev.stars==null?null:+ev.stars,correct_rate:ev.correctRate==null?null:+ev.correctRate,
+      status:ev.status||null,title:title||null,device:(typeof navigator!=="undefined"?String(navigator.userAgent||"").slice(0,80):"web")};
+    cloudFetch("island_practice_log",{method:"POST",headers:{"Prefer":"return=minimal"},body:JSON.stringify(row)}).catch(function(){});}
   function upper(subject){return String(subject).toUpperCase();}
 
   var G={KEY:KEY,COIN_PER_CORRECT:COIN_PER_CORRECT,COIN_PER_STAR:COIN_PER_STAR,READ_COINS:READ_COINS,CASH_MAX:CASH_MAX,
@@ -294,7 +351,7 @@
     var cut=Date.now()-60*864e5;
     p.practiceLog=p.practiceLog.filter(function(x){return !x.ts||x.ts>=cut;});
     if(p.practiceLog.length>2000)p.practiceLog=p.practiceLog.slice(-1500);
-    save(p);};
+    save(p);cloudLogPractice(ev);};
   G.levelTitle=function(subject,id){var L=window[upper(subject)+"_LEVELS"]||[];for(var i=0;i<L.length;i++)if(L[i].id===id)return L[i].title||id;return id;};
   G.itemTitle=function(subject,id){var it=G.dataItem(subject,id);if(!it)return id;var kp=String(it["知识点"]||"").split(/[；;]/)[0];return id+(kp?" · "+kp:"");};
   G.todayPracticeText=function(day){day=day||today();var p=load(),logs=(p.practiceLog||[]).filter(function(x){return x.date===day;});
@@ -316,6 +373,7 @@
       lines.push("");}
     block("math","【数学】");block("physics","【物理】");
     lines.push("用法：复制整段发群里或私信周老师/物理老师，即可据此写当日反馈。");
+    lines.push("已启用云同步；老师可直接读库（island_practice_log / island_progress）。");
     return lines.join("\n");};
   G.copyText=function(t){if(navigator.clipboard&&navigator.clipboard.writeText)return navigator.clipboard.writeText(t);
     return new Promise(function(res,rej){var a=document.createElement("textarea");a.value=t;a.style.position="fixed";a.style.left="-9999px";document.body.appendChild(a);a.select();
@@ -496,4 +554,6 @@
       el.querySelector("#vq").onclick=menu;G.variantWidget(el.querySelector("#vw"),x.v,{subject:subject,item:x.it,onDone:function(){qi++;draw();window.scrollTo(0,0);}});}
     menu();};
   window.XXGame=G;
+  G.CLOUD=CLOUD;G.cloudPull=cloudPull;G.cloudPush=cloudPush;
+  try{cloudPull().then(function(){_cloudReady=true;});}catch(e){}
 })();
