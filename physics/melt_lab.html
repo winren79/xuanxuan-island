@@ -55,10 +55,11 @@ function show(){hud();var it=ITEMS[idx],q=inV?it.v:it,h="";
 function pick(i){var it=ITEMS[idx],q=inV?it.v:it;for(var k=0;k<q.opts.length;k++)$("o"+k).disabled=true;
  if(i===q.ans){$("o"+i).className="opt right";XXGame.correct();if(!inV)first++;
   $("box").innerHTML+="<p class='ok'>✅ 打中了！+10🪙</p>"+(inV?"":"<div class='hint'>"+it.hint+"</div>")+"<button class='btn green' onclick='next()'>下一只 ➜</button>";}
- else{$("o"+i).className="opt wrong";$("o"+q.ans).className="opt right";hearts--;hud();XXGame.wrong();
+ else{$("o"+i).className="opt wrong";hearts--;hud();XXGame.wrong();
   if(hearts<=0){over();return;}
-  $("box").innerHTML+="<p class='bad'>❌ 被反击了，掉一颗心</p><div class='hint'>💡 "+it.hint+"</div>"+XXGame.whyCardHTML(card(it))+"<button class='btn ghost' onclick='listen()'>🔊 听晓伊老师讲</button>"+
-   (inV?"<button class='btn green' onclick='next()'>记住了，继续 ➜</button>":"<button class='btn orange' onclick='inV=true;show()'>答对变式题复活 ➜</button>");}
+  /* 严格自主：做错不标正确答案、不计分；只给引导，再出变式/再试 */
+  $("box").innerHTML+="<p class='bad'>❌ 做错了，本题不计分，掉一颗心</p><div class='hint'><b>引导（不是本题答案）：</b><br>💡 "+it.hint+"</div>"+XXGame.whyCardHTML(card(it))+"<button class='btn ghost' onclick='listen()'>🔊 听晓伊老师讲</button>"+
+   (inV?"<button class='btn orange' onclick='show()'>再试一次（仍无答案）➜</button><button class='btn green' onclick='next()'>先跳过，下一题 ➜</button>":"<button class='btn orange' onclick='inV=true;show()'>做变式题（无答案提示）➜</button>");}
  if(i!==q.ans&&hearts>0)XXGame.bindWhyCard($("box"),card(it));hud();}
 function listen(){var it=ITEMS[idx],n=it===LAB?6:idx-1;try{new Audio("audio/melt_why"+n+".mp3").play();}catch(e){}}
 function card(it){return {id:"physics:melt_lab:"+it.kind,"错因":it.why||"","概念":"",公式:""};}

@@ -603,7 +603,7 @@
       el.querySelector("#vstart").onclick=function(){build();draw();};}
     function draw(){if(qi>=queue.length){el.innerHTML='<h2>🎉 '+(queue.length?'这一轮练完了！':'这个范围里没有题了！')+'</h2>'+G.statusSummaryHTML(subject,data)+'<button class="btn green" id="vback">回到清单</button>';el.querySelector("#vback").onclick=menu;return;}
       var x=queue[qi];el.innerHTML='<p style="opacity:.7">'+(qi+1)+'/'+queue.length+' · 来自错题 '+esc(x.it.id)+' '+G.statusTag(G.itemStatus(subject,x.it))+' · '+esc(x.it["知识点"]||"")+'</p><h3>变式 '+(x.k+1)+'</h3><div id="vw"></div><button class="btn ghost" id="vq" style="margin-top:12px">返回清单</button>';
-      el.querySelector("#vq").onclick=menu;G.variantWidget(el.querySelector("#vw"),x.v,{subject:subject,item:x.it,onDone:function(){qi++;draw();window.scrollTo(0,0);}});}
+      el.querySelector("#vq").onclick=menu;G.variantWidget(el.querySelector("#vw"),x.v,{subject:subject,item:x.it,strict:true,onDone:function(ok){qi++;draw();window.scrollTo(0,0);}});}
     menu();};
   window.XXGame=G;
   G.CLOUD=CLOUD;G.cloudPull=cloudPull;G.cloudPush=cloudPush;
