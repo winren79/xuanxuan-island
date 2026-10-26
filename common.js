@@ -68,18 +68,33 @@
       body:JSON.stringify({student_id:CLOUD.studentId,payload:p,updated_at:new Date().toISOString()})})
       .then(function(){var m=cloudMeta();m.updated_at=new Date().toISOString();setCloudMeta(m);})
       .catch(function(){});}
+  function applyTeacherReset(local,remote,meta){
+    var r=remote||{}, at=r.teacherResetAt||"";
+    if(!at||at===(meta.teacherResetAt||""))return local;
+    var out=clone(local||{}), wipe=r.teacherWipe||{};
+    // 老师重置：按名单删关卡进度与变式状态（未做），避免「已练」合并盖回去
+    Object.keys(wipe.subjects||{}).forEach(function(subj){(wipe.subjects[subj]||[]).forEach(function(lid){
+      if(out.subjects&&out.subjects[subj])delete out.subjects[subj][lid];});});
+    Object.keys(wipe.vstatus||{}).forEach(function(subj){(wipe.vstatus[subj]||[]).forEach(function(id){
+      if(out.vstatus&&out.vstatus[subj])delete out.vstatus[subj][id];});});
+    // 若云端对应表已清空，以云端为准覆盖整科（防漏网）
+    if(wipe.replaceSubjects){out.subjects=out.subjects||{};Object.keys(wipe.replaceSubjects).forEach(function(s){out.subjects[s]=clone((r.subjects||{})[s]||{});});}
+    if(wipe.replaceVstatus){out.vstatus=out.vstatus||{};Object.keys(wipe.replaceVstatus).forEach(function(s){out.vstatus[s]=clone((r.vstatus||{})[s]||{});});}
+    out.teacherResetAt=at;return out;}
   function cloudPull(){if(!CLOUD.url)return Promise.resolve();
     return cloudFetch("island_progress?student_id=eq."+encodeURIComponent(CLOUD.studentId)+"&select=payload,updated_at")
       .then(function(rows){rows=rows||[];var meta=cloudMeta();
         if(!rows.length){return cloudPush();}
         var remote=rows[0], rAt=remote.updated_at||"", lAt=meta.updated_at||"";
-        if(rAt&&lAt&&rAt<=lAt){return cloudPush();} // 远端未更新：把本机较新进度推上去
         var local;try{local=JSON.parse(localStorage.getItem(KEY))||{};}catch(e){local={};}
-        var merged=mergeProgress(local,remote.payload||{});
+        var payload=remote.payload||{};
+        var needReset=payload.teacherResetAt&&payload.teacherResetAt!==(meta.teacherResetAt||"");
+        if(rAt&&lAt&&rAt<=lAt&&!needReset){return cloudPush();} // 远端未更新：把本机较新进度推上去
+        var merged=mergeProgress(local,payload);
+        merged=applyTeacherReset(merged,payload,meta);
         _cloudBusy=true;try{localStorage.setItem(KEY,JSON.stringify(merged));}catch(e){}
-        setCloudMeta({updated_at:rAt||new Date().toISOString()});_cloudBusy=false;
+        setCloudMeta({updated_at:rAt||new Date().toISOString(),teacherResetAt:payload.teacherResetAt||meta.teacherResetAt||""});_cloudBusy=false;
         try{G.refreshBars&&G.refreshBars();}catch(e){}
-        // 合并后若本地曾有更新，再推一次合并结果
         return cloudPush();})
       .catch(function(){});}
   function cloudLogPractice(ev){if(!CLOUD.url||!ev)return;
