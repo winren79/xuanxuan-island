@@ -472,7 +472,7 @@
     G._quiz={item:function(){return items[idx];},index:function(){return idx;},hearts:function(){return hearts;},tries:function(){return tries;}};
     if(!items.length){$("box").innerHTML="<p>本关暂无题目</p>";return;}review();};
 
-  document.addEventListenerer("DOMContentLoaded",musicButton);
+  document.addEventListener("DOMContentLoaded",musicButton);
   if(document.readyState!=="loading")musicButton();
 
   /* ---------- 可作答变式题：统一格式 + 自动判分 + 逐题状态 ----------
