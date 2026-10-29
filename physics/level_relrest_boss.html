@@ -1,0 +1,111 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>相对静止交接关</title><link rel="stylesheet" href="../common.css">
+<style>.hud{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}
+.msg{min-height:28px;margin:8px 0;font-size:18px}.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}
+.tag{display:inline-block;color:#fff;border-radius:10px;padding:2px 10px;font-size:16px}.big{font-size:64px;text-align:center;margin:6px 0}</style></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回地图</a>
+<div class="hud"><span id="hearts"></span><span id="stage"></span><span id="coins"></span></div>
+<div class="grid"><div class="col1"><div class="card scene"><h2>🏃 相对静止交接关</h2><div class="big">🏃🏁</div><p>新错题 P1029-6：交接棒要相对静止；看冒烟计时因为光速＞声速。</p></div></div>
+<div class="card" id="box"></div></div></div>
+<script src="../common.js"></script><script src="data.js"></script><script src="levels.js"></script><script src="chapters.js"></script>
+<script>
+XXGame.quiz({subject:"physics", levelId:"relrest_boss", items:[
+ {
+  "type": "mc",
+  "q": "接力赛交接棒时，两位同学应彼此处于相对（　）状态，交接才顺利。",
+  "opts": [
+   "静止",
+   "直线",
+   "加速",
+   "运动"
+  ],
+  "ans": 0,
+  "hint": "速度相近时彼此相对静止，交接棒才顺利。不要写成「直线」。",
+  "v": {
+   "q": "计时员看到发令枪冒烟开始计时，而不是听枪声，是因为（　）",
+   "opts": [
+    "光速大于声速",
+    "声速大于光速",
+    "光速等于声速",
+    "烟雾传播比声音快"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1029-6",
+  "kind": "小怪①"
+ },
+ {
+  "type": "mc",
+  "q": "关于圭表，下列说法正确的是（　）",
+  "opts": [
+   "圭越长，测得的节气越准",
+   "表越高，影子一定越长且与节气无关",
+   "夏至正午影较短，冬至正午影较长",
+   "圭表测的是太阳的方位变化"
+  ],
+  "ans": 2,
+  "hint": "正午太阳高度夏高冬低，故影长夏短冬长。",
+  "v": {
+   "q": "古人用圭表测节气，持续测量并比较的是（　）",
+   "opts": [
+    "表的高度",
+    "圭的长度",
+    "表在圭上的影子长度",
+    "太阳的方位"
+   ],
+   "ans": 2
+  },
+  "whySrc": "P1029-7",
+  "kind": "小怪②"
+ },
+ {
+  "type": "mc",
+  "q": "小孔成像实验中，下列说法正确的是（　）",
+  "opts": [
+   "小孔改成三角形，像也变成三角形",
+   "扎两个小孔，膜上有 2 个像",
+   "纸筒向罐内推，像变大",
+   "小孔成的是正立虚像"
+  ],
+  "ans": 1,
+  "hint": "像的形状跟物体，不跟孔；几个孔几个像；像距变小则像变小；小孔成倒立实像。",
+  "v": {
+   "q": "针孔照相机：纸筒 A 端蒙薄膜。观察窗外景物时，正确做法是（　）",
+   "opts": [
+    "A端插入罐内，眼睛对着薄膜",
+    "B端插入罐内，眼睛对着小孔",
+    "A端插入罐内，眼睛对着小孔",
+    "B端插入罐内，眼睛对着薄膜"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1029-11",
+  "kind": "小怪③"
+ },
+ {
+  "type": "mc",
+  "q": "计时员看到发令枪冒烟开始计时，而不是听枪声，是因为（　）",
+  "opts": [
+   "光速大于声速",
+   "声速大于光速",
+   "光速等于声速",
+   "烟雾传播比声音快"
+  ],
+  "ans": 0,
+  "hint": "光几乎瞬时到达，声音较慢，所以看冒烟计时更准。",
+  "v": {
+   "q": "接力赛交接棒时，两位同学应彼此处于相对（　）状态，交接才顺利。",
+   "opts": [
+    "静止",
+    "直线",
+    "加速",
+    "运动"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1029-6",
+  "kind": "BOSS",
+  "boss": true
+ }
+]});
+</script></body></html>

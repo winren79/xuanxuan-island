@@ -23,3 +23,6 @@ window.PHYSICS_LEVELS.push({"id": "auto_p1025b_17", "title": "实验方法关", 
 window.PHYSICS_LEVELS.push({"id": "auto_p1025b_18", "title": "斜面测速关", "file": "level_auto_p1025b_18.html", "icon": "🚗", "boss": "P1025b-18"});
 window.PHYSICS_LEVELS.push({"id": "auto_p1025b_19", "title": "ETC均速关", "file": "level_auto_p1025b_19.html", "icon": "🛣️", "boss": "P1025b-19"});
 window.PHYSICS_LEVELS.push({"id": "auto_p1025b_21", "title": "声速换算关", "file": "level_auto_p1025b_21.html", "icon": "📡", "boss": "P1025b-21"});
+window.PHYSICS_LEVELS.push({"id": "relrest_boss", "title": "相对静止交接关", "file": "level_relrest_boss.html", "icon": "🏃", "boss": "P1029-6"});
+window.PHYSICS_LEVELS.push({"id": "gnomon_boss", "title": "圭表影长关", "file": "level_gnomon_boss.html", "icon": "☀️", "boss": "P1029-7"});
+window.PHYSICS_LEVELS.push({"id": "pinhole_boss", "title": "针孔相机关", "file": "level_pinhole_boss.html", "icon": "📷", "boss": "P1029-11"});

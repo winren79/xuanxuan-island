@@ -1,4 +1,4 @@
-/* 物理岛章节（人教版八上），由 tools/gen_physics_levels.py 生成。格式见 接入规则.md v3-A */
+/* 物理岛章节（人教版八上），光现象关已解锁。 */
 window.PHYSICS_CHAPTERS = [
  {
   "id": "p1",
@@ -48,8 +48,11 @@ window.PHYSICS_CHAPTERS = [
   "id": "p4",
   "title": "光现象",
   "icon": "🌈",
-  "levels": [],
-  "locked": true
+  "levels": [
+   "relrest_boss",
+   "gnomon_boss",
+   "pinhole_boss"
+  ]
  },
  {
   "id": "p5",
