@@ -1,0 +1,111 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>激光墙反射关</title><link rel="stylesheet" href="../common.css">
+<style>.hud{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}
+.msg{min-height:28px;margin:8px 0;font-size:18px}.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}
+.tag{display:inline-block;color:#fff;border-radius:10px;padding:2px 10px;font-size:16px}.big{font-size:64px;text-align:center;margin:6px 0}</style></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回地图</a>
+<div class="hud"><span id="hearts"></span><span id="stage"></span><span id="coins"></span></div>
+<div class="grid"><div class="col1"><div class="card scene"><h2>🔦 激光墙反射关</h2><div class="big">🔦🧱</div><p>新错题 P1102-7：要打高处就往法线转；漫反射也遵守反射定律。</p></div></div>
+<div class="card" id="box"></div></div></div>
+<script src="../common.js"></script><script src="data.js"></script><script src="levels.js"></script><script src="chapters.js"></script>
+<script>
+XXGame.quiz({subject:"physics", levelId:"laser_wall_boss", items:[
+ {
+  "type": "mc",
+  "q": "关于光的反射，下列说法正确的是（　）",
+  "opts": [
+   "漫反射不遵循反射定律",
+   "镜面反射才遵循反射定律",
+   "漫反射和镜面反射都遵循反射定律",
+   "只有垂直入射才遵循反射定律"
+  ],
+  "ans": 2,
+  "hint": "漫反射每条光线仍遵守反射定律，只是法线方向不同。",
+  "v": {
+   "q": "水平镜面上方，入射光顺时针转到更靠近法线，则反射角（　）",
+   "opts": [
+    "变大",
+    "变小",
+    "不变",
+    "先变大再变小"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1102-7",
+  "kind": "小怪①"
+ },
+ {
+  "type": "mc",
+  "q": "汽车灯光照到自行车尾灯，尾灯发亮。下列说法正确的是（　）",
+  "opts": [
+   "尾灯是光源",
+   "尾灯不是光源",
+   "尾灯自己会发光",
+   "尾灯发生的是折射"
+  ],
+  "ans": 1,
+  "hint": "光源要自身能发光；尾灯是反射车灯的光，不是光源。",
+  "v": {
+   "q": "反光板表面凹凸不平，光在其表面发生的是（　）",
+   "opts": [
+    "镜面反射",
+    "漫反射",
+    "折射",
+    "直线传播"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1102-5",
+  "kind": "小怪②"
+ },
+ {
+  "type": "mc",
+  "q": "关于上述魔术箱，下列说法正确的是（　）",
+  "opts": [
+   "箱内一定有三块平面镜",
+   "左右小孔必须同高",
+   "激光传播方向在箱内可能改变4次",
+   "遮光板高度一定等于箱高"
+  ],
+  "ans": 2,
+  "hint": "「一定」往往不对；绕行时方向可能改变4次（四次反射）。",
+  "v": {
+   "q": "魔术箱中间插入遮光板，激光仍能从另一侧射出。最合理的解释是（　）",
+   "opts": [
+    "光会转弯绕过板",
+    "箱内用平面镜多次反射绕开遮光板",
+    "遮光板是透明的",
+    "激光穿透了遮光板"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1102-8",
+  "kind": "小怪③"
+ },
+ {
+  "type": "mc",
+  "q": "水平镜面上方，入射光顺时针转到更靠近法线，则反射角（　）",
+  "opts": [
+   "变大",
+   "变小",
+   "不变",
+   "先变大再变小"
+  ],
+  "ans": 1,
+  "hint": "入射光靠近法线→入射角变小→反射角变小，光斑可打到更高处。",
+  "v": {
+   "q": "关于光的反射，下列说法正确的是（　）",
+   "opts": [
+    "漫反射不遵循反射定律",
+    "镜面反射才遵循反射定律",
+    "漫反射和镜面反射都遵循反射定律",
+    "只有垂直入射才遵循反射定律"
+   ],
+   "ans": 2
+  },
+  "whySrc": "P1102-7",
+  "kind": "BOSS",
+  "boss": true
+ }
+]});
+</script></body></html>

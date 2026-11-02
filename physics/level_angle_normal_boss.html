@@ -1,0 +1,111 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>入射角看法线关</title><link rel="stylesheet" href="../common.css">
+<style>.hud{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}
+.msg{min-height:28px;margin:8px 0;font-size:18px}.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}
+.tag{display:inline-block;color:#fff;border-radius:10px;padding:2px 10px;font-size:16px}.big{font-size:64px;text-align:center;margin:6px 0}</style></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回地图</a>
+<div class="hud"><span id="hearts"></span><span id="stage"></span><span id="coins"></span></div>
+<div class="grid"><div class="col1"><div class="card scene"><h2>📐 入射角看法线关</h2><div class="big">📐🪞</div><p>新错题 P1102-2：角看法线；垂直入射两角都是0°；镜转θ光转2θ。</p></div></div>
+<div class="card" id="box"></div></div></div>
+<script src="../common.js"></script><script src="data.js"></script><script src="levels.js"></script><script src="chapters.js"></script>
+<script>
+XXGame.quiz({subject:"physics", levelId:"angle_normal_boss", items:[
+ {
+  "type": "mc",
+  "q": "一束光垂直射到平面镜上，入射角和反射角分别是（　）",
+  "opts": [
+   "0°、0°",
+   "90°、90°",
+   "0°、90°",
+   "90°、0°"
+  ],
+  "ans": 0,
+  "hint": "垂直入射时光线沿法线，入射角＝反射角＝0°。角看法线，不是看镜面。",
+  "v": {
+   "q": "平面镜绕入射点转动 10°，反射光线相对原来方向转动（　）",
+   "opts": [
+    "5°",
+    "10°",
+    "20°",
+    "40°"
+   ],
+   "ans": 2
+  },
+  "whySrc": "P1102-2",
+  "kind": "小怪①"
+ },
+ {
+  "type": "mc",
+  "q": "入射光线与镜面夹角 40°，入射角增大 10°后，反射角变为（　）",
+  "opts": [
+   "40°",
+   "50°",
+   "60°",
+   "70°"
+  ],
+  "ans": 2,
+  "hint": "原入射角＝90°−40°＝50°；增大10°后入射角60°，反射角也是60°。",
+  "v": {
+   "q": "入射光线与平面镜夹角为 60°，则反射角为（　）",
+   "opts": [
+    "60°",
+    "30°",
+    "90°",
+    "120°"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1102-4",
+  "kind": "小怪②"
+ },
+ {
+  "type": "mc",
+  "q": "反射定律实验中，把纸板沿中线剪开并把上半折后，只在下部看到反射光，这说明（　）",
+  "opts": [
+   "光沿直线传播",
+   "反射光线不存在",
+   "入射光线、反射光线和法线在同一平面内",
+   "反射角大于入射角"
+  ],
+  "ans": 2,
+  "hint": "下部仍共面才能看到反射光，证明三线共面，不是再讲直线传播。",
+  "v": {
+   "q": "探究光的反射定律时，多次改变入射角做实验，主要目的是（　）",
+   "opts": [
+    "减少测量误差",
+    "寻找普遍规律",
+    "让光路更亮",
+    "练习使用激光笔"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1102-3",
+  "kind": "小怪③"
+ },
+ {
+  "type": "mc",
+  "q": "平面镜绕入射点转动 10°，反射光线相对原来方向转动（　）",
+  "opts": [
+   "5°",
+   "10°",
+   "20°",
+   "40°"
+  ],
+  "ans": 2,
+  "hint": "镜转 θ，法线转 θ，反射光线转 2θ。10°→20°。",
+  "v": {
+   "q": "一束光垂直射到平面镜上，入射角和反射角分别是（　）",
+   "opts": [
+    "0°、0°",
+    "90°、90°",
+    "0°、90°",
+    "90°、0°"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1102-2",
+  "kind": "BOSS",
+  "boss": true
+ }
+]});
+</script></body></html>

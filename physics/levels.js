@@ -26,3 +26,9 @@ window.PHYSICS_LEVELS.push({"id": "auto_p1025b_21", "title": "声速换算关", 
 window.PHYSICS_LEVELS.push({"id": "relrest_boss", "title": "相对静止交接关", "file": "level_relrest_boss.html", "icon": "🏃", "boss": "P1029-6"});
 window.PHYSICS_LEVELS.push({"id": "gnomon_boss", "title": "圭表影长关", "file": "level_gnomon_boss.html", "icon": "☀️", "boss": "P1029-7"});
 window.PHYSICS_LEVELS.push({"id": "pinhole_boss", "title": "针孔相机关", "file": "level_pinhole_boss.html", "icon": "📷", "boss": "P1029-11"});
+window.PHYSICS_LEVELS.push({"id": "angle_normal_boss", "title": "入射角看法线关", "file": "level_angle_normal_boss.html", "icon": "📐", "boss": "P1102-2"});
+window.PHYSICS_LEVELS.push({"id": "reflect_lab_boss", "title": "反射实验关", "file": "level_reflect_lab_boss.html", "icon": "🧪", "boss": "P1102-3"});
+window.PHYSICS_LEVELS.push({"id": "mirror_angle_boss", "title": "镜面夹角换算关", "file": "level_mirror_angle_boss.html", "icon": "📏", "boss": "P1102-4"});
+window.PHYSICS_LEVELS.push({"id": "diffuse_source_boss", "title": "漫反射与光源关", "file": "level_diffuse_source_boss.html", "icon": "💡", "boss": "P1102-5"});
+window.PHYSICS_LEVELS.push({"id": "laser_wall_boss", "title": "激光墙反射关", "file": "level_laser_wall_boss.html", "icon": "🔦", "boss": "P1102-7"});
+window.PHYSICS_LEVELS.push({"id": "magic_box_boss", "title": "魔术箱绕行关", "file": "level_magic_box_boss.html", "icon": "📦", "boss": "P1102-8"});

@@ -1,0 +1,111 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>魔术箱绕行关</title><link rel="stylesheet" href="../common.css">
+<style>.hud{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}
+.msg{min-height:28px;margin:8px 0;font-size:18px}.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}
+.tag{display:inline-block;color:#fff;border-radius:10px;padding:2px 10px;font-size:16px}.big{font-size:64px;text-align:center;margin:6px 0}</style></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回地图</a>
+<div class="hud"><span id="hearts"></span><span id="stage"></span><span id="coins"></span></div>
+<div class="grid"><div class="col1"><div class="card scene"><h2>📦 魔术箱绕行关</h2><div class="big">📦✨</div><p>新错题 P1102-8：插板挡不住＝镜面绕行；可能改向4次；慎选「一定」。</p></div></div>
+<div class="card" id="box"></div></div></div>
+<script src="../common.js"></script><script src="data.js"></script><script src="levels.js"></script><script src="chapters.js"></script>
+<script>
+XXGame.quiz({subject:"physics", levelId:"magic_box_boss", items:[
+ {
+  "type": "mc",
+  "q": "魔术箱中间插入遮光板，激光仍能从另一侧射出。最合理的解释是（　）",
+  "opts": [
+   "光会转弯绕过板",
+   "箱内用平面镜多次反射绕开遮光板",
+   "遮光板是透明的",
+   "激光穿透了遮光板"
+  ],
+  "ans": 1,
+  "hint": "光在均匀介质中直线传播，靠平面镜反射才能绕开遮光板。",
+  "v": {
+   "q": "关于上述魔术箱，下列说法正确的是（　）",
+   "opts": [
+    "箱内一定有三块平面镜",
+    "左右小孔必须同高",
+    "激光传播方向在箱内可能改变4次",
+    "遮光板高度一定等于箱高"
+   ],
+   "ans": 2
+  },
+  "whySrc": "P1102-8",
+  "kind": "小怪①"
+ },
+ {
+  "type": "mc",
+  "q": "水平镜面上方，入射光顺时针转到更靠近法线，则反射角（　）",
+  "opts": [
+   "变大",
+   "变小",
+   "不变",
+   "先变大再变小"
+  ],
+  "ans": 1,
+  "hint": "入射光靠近法线→入射角变小→反射角变小，光斑可打到更高处。",
+  "v": {
+   "q": "关于光的反射，下列说法正确的是（　）",
+   "opts": [
+    "漫反射不遵循反射定律",
+    "镜面反射才遵循反射定律",
+    "漫反射和镜面反射都遵循反射定律",
+    "只有垂直入射才遵循反射定律"
+   ],
+   "ans": 2
+  },
+  "whySrc": "P1102-7",
+  "kind": "小怪②"
+ },
+ {
+  "type": "mc",
+  "q": "反射定律实验中，把纸板沿中线剪开并把上半折后，只在下部看到反射光，这说明（　）",
+  "opts": [
+   "光沿直线传播",
+   "反射光线不存在",
+   "入射光线、反射光线和法线在同一平面内",
+   "反射角大于入射角"
+  ],
+  "ans": 2,
+  "hint": "下部仍共面才能看到反射光，证明三线共面，不是再讲直线传播。",
+  "v": {
+   "q": "探究光的反射定律时，多次改变入射角做实验，主要目的是（　）",
+   "opts": [
+    "减少测量误差",
+    "寻找普遍规律",
+    "让光路更亮",
+    "练习使用激光笔"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1102-3",
+  "kind": "小怪③"
+ },
+ {
+  "type": "mc",
+  "q": "关于上述魔术箱，下列说法正确的是（　）",
+  "opts": [
+   "箱内一定有三块平面镜",
+   "左右小孔必须同高",
+   "激光传播方向在箱内可能改变4次",
+   "遮光板高度一定等于箱高"
+  ],
+  "ans": 2,
+  "hint": "「一定」往往不对；绕行时方向可能改变4次（四次反射）。",
+  "v": {
+   "q": "魔术箱中间插入遮光板，激光仍能从另一侧射出。最合理的解释是（　）",
+   "opts": [
+    "光会转弯绕过板",
+    "箱内用平面镜多次反射绕开遮光板",
+    "遮光板是透明的",
+    "激光穿透了遮光板"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1102-8",
+  "kind": "BOSS",
+  "boss": true
+ }
+]});
+</script></body></html>
