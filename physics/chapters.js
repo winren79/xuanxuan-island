@@ -5,7 +5,9 @@ window.PHYSICS_CHAPTERS = [
   "title": "机械运动",
   "icon": "🚗",
   "levels": [
-   "motion_measure"
+   "motion_measure",
+   "bridge_whole_boss",
+   "tunnel_mintime_boss"
   ]
  },
  {

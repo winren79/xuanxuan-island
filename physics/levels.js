@@ -32,3 +32,5 @@ window.PHYSICS_LEVELS.push({"id": "mirror_angle_boss", "title": "镜面夹角换
 window.PHYSICS_LEVELS.push({"id": "diffuse_source_boss", "title": "漫反射与光源关", "file": "level_diffuse_source_boss.html", "icon": "💡", "boss": "P1102-5"});
 window.PHYSICS_LEVELS.push({"id": "laser_wall_boss", "title": "激光墙反射关", "file": "level_laser_wall_boss.html", "icon": "🔦", "boss": "P1102-7"});
 window.PHYSICS_LEVELS.push({"id": "magic_box_boss", "title": "魔术箱绕行关", "file": "level_magic_box_boss.html", "icon": "📦", "boss": "P1102-8"});
+window.PHYSICS_LEVELS.push({"id": "bridge_whole_boss", "title": "整车过桥取整关", "file": "level_bridge_whole_boss.html", "icon": "🌉", "boss": "P1105-3"});
+window.PHYSICS_LEVELS.push({"id": "tunnel_mintime_boss", "title": "隧道最短时间关", "file": "level_tunnel_mintime_boss.html", "icon": "🚇", "boss": "P1105-5"});

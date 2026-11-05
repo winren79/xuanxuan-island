@@ -1,0 +1,111 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>整车过桥取整关</title><link rel="stylesheet" href="../common.css">
+<style>.hud{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}
+.msg{min-height:28px;margin:8px 0;font-size:18px}.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}
+.tag{display:inline-block;color:#fff;border-radius:10px;padding:2px 10px;font-size:16px}.big{font-size:64px;text-align:center;margin:6px 0}</style></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回地图</a>
+<div class="hud"><span id="hearts"></span><span id="stage"></span><span id="coins"></span></div>
+<div class="grid"><div class="col1"><div class="card scene"><h2>🌉 整车过桥取整关</h2><div class="big">🌉⏱️</div><p>新错题 P1105-3：整车在桥上用桥长减车长；保留整数要四舍五入。</p></div></div>
+<div class="card" id="box"></div></div></div>
+<script src="../common.js"></script><script src="data.js"></script><script src="levels.js"></script><script src="chapters.js"></script>
+<script>
+XXGame.quiz({subject:"physics", levelId:"bridge_whole_boss", items:[
+ {
+  "type": "mc",
+  "q": "火车长 200 m，以 20 m/s 完全行驶在一座 2000 m 的桥上（整车都在桥上）。所用时间是（　）",
+  "opts": [
+   "90 s",
+   "100 s",
+   "110 s",
+   "80 s"
+  ],
+  "ans": 0,
+  "hint": "整车在桥上：s=桥长−车长=1800 m，t=1800/20=90 s。不要加成 2200。",
+  "v": {
+   "q": "整车在桥上行驶路程 1500 m，速度 40 m/s，时间保留整数应为（　）",
+   "opts": [
+    "37 s",
+    "38 s",
+    "37.5 s",
+    "40 s"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1105-3",
+  "kind": "小怪①"
+ },
+ {
+  "type": "mc",
+  "q": "限速 80 km/h，隧道 4000 m，匀速通过用了 200 s。该车（　）",
+  "opts": [
+   "超速了，因为 20 m/s＞80",
+   "超速了，因为 72 km/h＞80",
+   "没有超速，因为 72 km/h＜80 km/h",
+   "刚好压线，速度等于 80 km/h"
+  ],
+  "ans": 2,
+  "hint": "v=4000/200=20 m/s=72 km/h＜80 km/h，没有超速。注意 m/s 要×3.6 才和 km/h 比。",
+  "v": {
+   "q": "隧道长 2.4 km，限速 60 km/h。不超速通过的最短时间是（　）",
+   "opts": [
+    "0.4 h",
+    "2.4 min",
+    "24 min",
+    "0.04 min"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P1105-5",
+  "kind": "小怪②"
+ },
+ {
+  "type": "mc",
+  "q": "接上题：汽车制动后还要滑行 35 m 才停下，前方 60 m 处有障碍物。若司机酒驾，反应时间变为原来的 2 倍（车速不变），则（　）",
+  "opts": [
+   "停车距离 50 m，不会撞上",
+   "停车距离 65 m，会撞上",
+   "停车距离 80 m，会撞上",
+   "停车距离 60 m，刚好停在障碍物前"
+  ],
+  "ans": 1,
+  "hint": "反应距离 25 m/s×1.2 s＝30 m，总停车距离 30 m＋35 m＝65 m＞60 m，会撞上。",
+  "v": {
+   "q": "司机以 25 m/s 匀速行驶，发现情况后反应过程中汽车匀速前进了 15 m。司机的反应时间是（　）",
+   "opts": [
+    "0.6 s",
+    "1.67 s",
+    "375 s",
+    "0.4 s"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P0927-13",
+  "kind": "小怪③"
+ },
+ {
+  "type": "mc",
+  "q": "整车在桥上行驶路程 1500 m，速度 40 m/s，时间保留整数应为（　）",
+  "opts": [
+   "37 s",
+   "38 s",
+   "37.5 s",
+   "40 s"
+  ],
+  "ans": 1,
+  "hint": "t=1500/40=37.5 s，保留整数按四舍五入得 38 s，不能截成 37。",
+  "v": {
+   "q": "火车长 200 m，以 20 m/s 完全行驶在一座 2000 m 的桥上（整车都在桥上）。所用时间是（　）",
+   "opts": [
+    "90 s",
+    "100 s",
+    "110 s",
+    "80 s"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1105-3",
+  "kind": "BOSS",
+  "boss": true
+ }
+]});
+</script></body></html>
