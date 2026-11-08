@@ -34,3 +34,4 @@ window.PHYSICS_LEVELS.push({"id": "laser_wall_boss", "title": "激光墙反射�
 window.PHYSICS_LEVELS.push({"id": "magic_box_boss", "title": "魔术箱绕行关", "file": "level_magic_box_boss.html", "icon": "📦", "boss": "P1102-8"});
 window.PHYSICS_LEVELS.push({"id": "bridge_whole_boss", "title": "整车过桥取整关", "file": "level_bridge_whole_boss.html", "icon": "🌉", "boss": "P1105-3"});
 window.PHYSICS_LEVELS.push({"id": "tunnel_mintime_boss", "title": "隧道最短时间关", "file": "level_tunnel_mintime_boss.html", "icon": "🚇", "boss": "P1105-5"});
+window.PHYSICS_LEVELS.push({"id": "st_gap_boss", "title": "图像外推相距关", "file": "level_st_gap_boss.html", "icon": "📈", "boss": "P1108-1"});
