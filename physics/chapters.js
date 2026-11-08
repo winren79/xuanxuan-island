@@ -7,7 +7,8 @@ window.PHYSICS_CHAPTERS = [
   "levels": [
    "motion_measure",
    "bridge_whole_boss",
-   "tunnel_mintime_boss"
+   "tunnel_mintime_boss",
+   "st_gap_boss"
   ]
  },
  {

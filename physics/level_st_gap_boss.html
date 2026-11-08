@@ -1,0 +1,111 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>图像外推相距关</title><link rel="stylesheet" href="../common.css">
+<style>.hud{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:bold;padding-right:52px}
+.msg{min-height:28px;margin:8px 0;font-size:18px}.hint{background:#FFF0D6;border-left:6px solid var(--orange);padding:10px;border-radius:10px;margin:8px 0}
+.tag{display:inline-block;color:#fff;border-radius:10px;padding:2px 10px;font-size:16px}.big{font-size:64px;text-align:center;margin:6px 0}</style></head><body><div class="wrap">
+<a class="back" href="index.html">← 返回地图</a>
+<div class="hud"><span id="hearts"></span><span id="stage"></span><span id="coins"></span></div>
+<div class="grid"><div class="col1"><div class="card scene"><h2>📈 图像外推相距关</h2><div class="big">📈🚗</div><p>新错题 P1108-1：s-t 图『均未停止』要外推；两车相距＝路程差。</p></div></div>
+<div class="card" id="box"></div></div></div>
+<script src="../common.js"></script><script src="data.js"></script><script src="levels.js"></script><script src="chapters.js"></script>
+<script>
+XXGame.quiz({subject:"physics", levelId:"st_gap_boss", items:[
+ {
+  "type": "mc",
+  "q": "甲、乙同向匀速且均未停止。s-t 图甲过(20,300)、乙过(50,300)。t=50s时两车相距（　）",
+  "opts": [
+   "150 m",
+   "300 m",
+   "450 m",
+   "600 m"
+  ],
+  "ans": 2,
+  "hint": "v甲=15 m/s，v乙=6 m/s。50s时 s甲=750 m、s乙=300 m，相距450 m。甲线虽只画到20s，『未停止』要外推。",
+  "v": {
+   "q": "甲、乙同向匀速，s-t 图甲过(10,100)、乙过(40,100)，均未停止。t=40s时两车相距（　）",
+   "opts": [
+    "100 m",
+    "200 m",
+    "300 m",
+    "400 m"
+   ],
+   "ans": 2
+  },
+  "whySrc": "P1108-1",
+  "kind": "小怪①"
+ },
+ {
+  "type": "mc",
+  "q": "整车在桥上行驶路程 1500 m，速度 40 m/s，时间保留整数应为（　）",
+  "opts": [
+   "37 s",
+   "38 s",
+   "37.5 s",
+   "40 s"
+  ],
+  "ans": 1,
+  "hint": "t=1500/40=37.5 s，保留整数按四舍五入得 38 s，不能截成 37。",
+  "v": {
+   "q": "火车长 200 m，以 20 m/s 完全行驶在一座 2000 m 的桥上（整车都在桥上）。所用时间是（　）",
+   "opts": [
+    "90 s",
+    "100 s",
+    "110 s",
+    "80 s"
+   ],
+   "ans": 0
+  },
+  "whySrc": "P1105-3",
+  "kind": "小怪②"
+ },
+ {
+  "type": "mc",
+  "q": "小车从斜面顶端 A 滑到底端 C，AC＝90 cm，用时 6 s。若小车过了 A 点才开始计时，则（　）",
+  "opts": [
+   "vAC＝15 cm/s，测得值偏大",
+   "vAC＝15 cm/s，测得值偏小",
+   "vAC＝540 cm/s，测得值偏大",
+   "vAC＝15 cm/s，测得值不受影响"
+  ],
+  "ans": 0,
+  "hint": "v＝s/t＝90 cm÷6 s＝15 cm/s；晚开始计时使 t 偏小，v 偏大。",
+  "v": {
+   "q": "测小车平均速度时，斜面坡度应调得较小，目的是（　）",
+   "opts": [
+    "便于测量路程",
+    "便于测量时间",
+    "让小车跑得更快",
+    "让小车不会停下"
+   ],
+   "ans": 1
+  },
+  "whySrc": "P0927-12",
+  "kind": "小怪③"
+ },
+ {
+  "type": "mc",
+  "q": "甲、乙同向匀速，s-t 图甲过(10,100)、乙过(40,100)，均未停止。t=40s时两车相距（　）",
+  "opts": [
+   "100 m",
+   "200 m",
+   "300 m",
+   "400 m"
+  ],
+  "ans": 2,
+  "hint": "v甲=10 m/s，v乙=2.5 m/s。40s时 s甲=400 m、s乙=100 m，相距300 m。",
+  "v": {
+   "q": "甲、乙同向匀速且均未停止。s-t 图甲过(20,300)、乙过(50,300)。t=50s时两车相距（　）",
+   "opts": [
+    "150 m",
+    "300 m",
+    "450 m",
+    "600 m"
+   ],
+   "ans": 2
+  },
+  "whySrc": "P1108-1",
+  "kind": "BOSS",
+  "boss": true
+ }
+]});
+</script></body></html>
